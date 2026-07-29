@@ -106,7 +106,7 @@
         }
 
         .dataTables_scrollHead {
-            overflow: hidden !important;
+            overflow: visible !important;
             border-bottom: 2px solid var(--border-color) !important;
         }
 
@@ -123,7 +123,7 @@
         }
 
         .short-column {
-            min-width: 100px !important;
+            min-width: 110px !important;
         }
 
         table.dataTable thead th {
@@ -156,17 +156,97 @@
             background-color: var(--selected-col-bg) !important;
         }
 
-        /* Filter Input Box */
-        .column-filter {
-            width: 100%;
+        /* Checkbox Multi-Select Dropdown Container */
+        .filter-dropdown-wrapper {
+            position: relative;
             margin-top: 6px;
-            padding: 4px 6px;
-            box-sizing: border-box;
-            background-color: #ffffff;
+            width: 100%;
+        }
+
+        .filter-btn {
+            width: 100%;
+            padding: 4px 8px;
+            background: #ffffff;
             border: 1px solid var(--border-color);
-            color: var(--text-color);
             border-radius: 4px;
             font-size: 0.75rem;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        .filter-btn:hover {
+            background: #f1f5f9;
+        }
+        .filter-btn.active {
+            background: #dcfce7;
+            border-color: var(--accent-color);
+            color: var(--accent-hover);
+        }
+
+        .filter-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            min-width: 190px;
+            max-height: 250px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            padding: 8px;
+            margin-top: 4px;
+        }
+
+        .filter-menu.show {
+            display: block;
+        }
+
+        .filter-menu-actions {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.75rem;
+        }
+
+        .filter-action-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-weight: 600;
+            padding: 0;
+        }
+        .filter-action-btn:hover {
+            text-decoration: underline;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 2px;
+            font-size: 0.78rem;
+            color: var(--text-color);
+            cursor: pointer;
+            word-break: break-all;
+        }
+        .filter-option:hover {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .filter-option input[type="checkbox"] {
+            cursor: pointer;
+            accent-color: var(--accent-color);
         }
 
         .dataTables_wrapper .dataTables_length,
@@ -266,7 +346,7 @@
 
         // Format Cells: Maximum 3 decimals, <= -2146000000 or "CHECK" -> "No Data"
         function formatCellValue(val) {
-            if (val === null || val === undefined || val === '') return '';
+            if (val === null || val === undefined || val === '') return 'No Data';
             
             let strVal = String(val).trim();
             
@@ -298,7 +378,7 @@
             return maxLens;
         }
 
-        // Synchronized Scrolling
+        // Synchronized Horizontal Scrolling
         function setupSynchronizedScrolling() {
             const $scrollBody = $('.dataTables_scrollBody');
             const $scrollHead = $('.dataTables_scrollHead');
@@ -322,7 +402,7 @@
             }
         }
 
-        // Interactive Manual Drag Column Resizer
+        // Interactive Column Resizer
         function makeColumnsResizable() {
             $('.dataTables_scrollHead th').each(function (index) {
                 const $th = $(this);
@@ -340,7 +420,6 @@
                         startWidth = $th.outerWidth();
                         $handle.addClass('resizing');
 
-                        // Find all corresponding body cells for this column
                         $bodyCells = $('.dataTables_scrollBody tbody tr').map(function () {
                             return $(this).find('td').eq(index)[0];
                         });
@@ -368,6 +447,26 @@
             const tableBody = document.getElementById('table-body');
             const maxColumnLens = getColumnMaxLengths();
 
+            const columnUniqueValues = headers.map(() => new Set());
+
+            // Build Rows & Collect Unique Values
+            rows.forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach((_, colIndex) => {
+                    const formatted = formatCellValue(row[colIndex]);
+                    columnUniqueValues[colIndex].add(formatted);
+
+                    const td = document.createElement('td');
+                    td.innerText = formatted;
+                    if (maxColumnLens[colIndex] < 15) {
+                        td.classList.add('short-column');
+                    }
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            });
+
+            // Build Header Row & Checkbox Dropdown Filters
             headers.forEach((headerText, index) => {
                 const isShortCol = maxColumnLens[index] < 15;
 
@@ -377,31 +476,55 @@
                 if (isShortCol) th.classList.add('short-column');
                 headRow.appendChild(th);
 
-                // Header Filter Row
+                // Checkbox Dropdown Filter Cell
                 const thFilter = document.createElement('th');
                 if (isShortCol) thFilter.classList.add('short-column');
-                
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.placeholder = `Filter...`;
-                input.className = 'column-filter';
-                input.dataset.colIndex = index;
-                thFilter.appendChild(input);
-                filterRow.appendChild(thFilter);
-            });
 
-            // Build Data Rows
-            rows.forEach(row => {
-                const tr = document.createElement('tr');
-                headers.forEach((_, colIndex) => {
-                    const td = document.createElement('td');
-                    td.innerText = formatCellValue(row[colIndex]);
-                    if (maxColumnLens[colIndex] < 15) {
-                        td.classList.add('short-column');
-                    }
-                    tr.appendChild(td);
+                const wrapper = document.createElement('div');
+                wrapper.className = 'filter-dropdown-wrapper';
+
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.innerHTML = `Filter <span>▾</span>`;
+                btn.type = 'button';
+
+                const menu = document.createElement('div');
+                menu.className = 'filter-menu';
+
+                // Top Actions (All / Clear)
+                const actions = document.createElement('div');
+                actions.className = 'filter-menu-actions';
+                actions.innerHTML = `
+                    <button type="button" class="filter-action-btn select-all-btn">All</button>
+                    <button type="button" class="filter-action-btn clear-all-btn">Clear</button>
+                `;
+                menu.appendChild(actions);
+
+                // Sorted Unique Items with Checkboxes
+                const sortedVals = Array.from(columnUniqueValues[index]).sort((a, b) => {
+                    if (a === 'No Data') return 1;
+                    if (b === 'No Data') return -1;
+                    return String(a).localeCompare(String(b), undefined, { numeric: true });
                 });
-                tableBody.appendChild(tr);
+
+                sortedVals.forEach(val => {
+                    const label = document.createElement('label');
+                    label.className = 'filter-option';
+                    
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.value = val;
+                    cb.dataset.colIndex = index;
+
+                    label.appendChild(cb);
+                    label.appendChild(document.createTextNode(val));
+                    menu.appendChild(label);
+                });
+
+                wrapper.appendChild(btn);
+                wrapper.appendChild(menu);
+                thFilter.appendChild(wrapper);
+                filterRow.appendChild(thFilter);
             });
 
             // Initialize DataTables
@@ -412,16 +535,6 @@
                 lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 autoWidth: false,
                 initComplete: function () {
-                    // Column Search Filters
-                    this.api().columns().every(function (colIdx) {
-                        const that = this;
-                        $(`input[data-col-index="${colIdx}"]`).on('keyup change clear', function () {
-                            if (that.search() !== this.value) {
-                                that.search(this.value).draw();
-                            }
-                        });
-                    });
-
                     setupSynchronizedScrolling();
                     makeColumnsResizable();
                 },
@@ -431,10 +544,106 @@
                 }
             });
 
-            // Column Selection Highlight
+            // Dropdown Toggle Handler
+            $(document).on('click', '.filter-btn', function (e) {
+                e.stopPropagation();
+                const $currentMenu = $(this).next('.filter-menu');
+                $('.filter-menu').not($currentMenu).removeClass('show');
+                $currentMenu.toggleClass('show');
+            });
+
+            // Close dropdown when clicking outside
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.filter-dropdown-wrapper').length) {
+                    $('.filter-menu').removeClass('show');
+                }
+            });
+
+            // CASCADING FILTER LOGIC: Updates all dropdowns based on currently filtered rows
+            function updateCascadingDropdowns() {
+                // Retrieve data from all currently matching/visible rows
+                const filteredRows = table.rows({ search: 'applied' }).data().toArray();
+
+                // Compute unique valid values for each column from the current filtered result set
+                const validValuesPerColumn = headers.map(() => new Set());
+                filteredRows.forEach(row => {
+                    row.forEach((cellVal, colIdx) => {
+                        validValuesPerColumn[colIdx].add(cellVal);
+                    });
+                });
+
+                // Update visibility of options in every column's dropdown menu
+                headers.forEach((_, colIdx) => {
+                    const $menu = $(`input[data-col-index="${colIdx}"]`).closest('.filter-menu');
+                    const validSet = validValuesPerColumn[colIdx];
+
+                    $menu.find('.filter-option').each(function () {
+                        const $cb = $(this).find('input');
+                        const val = $cb.val();
+
+                        // Show option if it exists in current filtered dataset OR if it is already checked
+                        if (validSet.has(val) || $cb.is(':checked')) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                });
+            }
+
+            // Apply filter for a specific column and trigger cascading updates
+            function applyColumnFilter(colIdx) {
+                const selected = [];
+                $(`input[data-col-index="${colIdx}"]:checked`).each(function () {
+                    selected.push($.fn.dataTable.util.escapeRegex($(this).val()));
+                });
+
+                const $btn = $(`input[data-col-index="${colIdx}"]`).closest('.filter-dropdown-wrapper').find('.filter-btn');
+
+                if (selected.length > 0) {
+                    const regexSearch = `^(${selected.join('|')})$`;
+                    table.column(colIdx).search(regexSearch, true, false).draw();
+                    $btn.addClass('active').html(`Filter (${selected.length}) <span>▾</span>`);
+                } else {
+                    table.column(colIdx).search('').draw();
+                    $btn.removeClass('active').html(`Filter <span>▾</span>`);
+                }
+
+                // Trigger Cascading Filter update across all dropdowns
+                updateCascadingDropdowns();
+            }
+
+            $(document).on('change', '.filter-option input[type="checkbox"]', function () {
+                const colIdx = $(this).data('colIndex');
+                applyColumnFilter(colIdx);
+            });
+
+            // Select All Button Handler (Selects visible options only)
+            $(document).on('click', '.select-all-btn', function (e) {
+                e.stopPropagation();
+                const $menu = $(this).closest('.filter-menu');
+                const $checkboxes = $menu.find('.filter-option:visible input[type="checkbox"]');
+                $checkboxes.prop('checked', true);
+                if ($checkboxes.length > 0) {
+                    applyColumnFilter($checkboxes.first().data('colIndex'));
+                }
+            });
+
+            // Clear All Button Handler
+            $(document).on('click', '.clear-all-btn', function (e) {
+                e.stopPropagation();
+                const $menu = $(this).closest('.filter-menu');
+                const $checkboxes = $menu.find('input[type="checkbox"]');
+                $checkboxes.prop('checked', false);
+                if ($checkboxes.length > 0) {
+                    applyColumnFilter($checkboxes.first().data('colIndex'));
+                }
+            });
+
+            // Column Click Highlight
             let selectedColIndex = null;
             $('#excel-table').on('click', 'th, td', function (e) {
-                if ($(e.target).is('input') || $(e.target).hasClass('resize-handle')) return;
+                if ($(e.target).closest('.filter-dropdown-wrapper').length || $(e.target).hasClass('resize-handle')) return;
 
                 const cell = table.cell(this);
                 if (!cell || !cell.index()) return;
