@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -104,6 +104,36 @@
         .release-date-bar .release-date-label {
             font-weight: 500;
             color: #a16207;
+        }
+
+        /* Static shared header + simple text nav (Portfolio360 style, no buttons) */
+        .header-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            min-height: 84px;
+            box-sizing: border-box;
+        }
+        .site-nav {
+            display: flex;
+            gap: 26px;
+            align-items: center;
+            margin-left: 32px;
+            flex-wrap: wrap;
+        }
+        .site-nav a {
+            color: #334155;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .site-nav a:hover {
+            color: var(--accent-color);
+        }
+        .site-nav a.active {
+            color: #b45309;
+            font-weight: 700;
         }
 
         /* Overall Layout: Filters Sidebar + Table */
@@ -495,7 +525,7 @@
 </head>
 <body>
 
-    <!-- Header Container with Branding Logo -->
+    <!-- Shared static header: logo left, simple text links, counter right -->
     <div class="header-container">
         <div class="brand-section">
             <img src="LOGO.jpeg" alt="SAlgo Logo" class="brand-logo" onerror="this.src='LOGO green Background.jpeg';">
@@ -503,10 +533,17 @@
                 <h1>Stock Evaluation Dashboard</h1>
                 <p>Yearly Performance & Score Analysis</p>
             </div>
+            <nav class="site-nav">
+                <a href="index.html" class="active">Screener</a>
+                <a href="StockAnalysis.html">Stock Analysis</a>
+                <a href="strategy1.html">Strategy 1</a>
+                <a href="strategy2.html">Strategy 2</a>
+                <a href="performance.html">Performance</a>
+            </nav>
         </div>
 
         <div class="visitor-counter-box">
-            <span>👁️ Visitors:</span>
+            <span>Visitors:</span>
             <span class="count-value" id="visitor-count">Loading...</span>
         </div>
     </div>
@@ -577,11 +614,24 @@
             return true;
         });
 
-        // Visitor Counter
+        // Global visitor counter (Firebase RTDB). Counts once per browser
+        // session: the first page visited pushes one record; every page shows
+        // the same global total. Set FIREBASE_VISITS_URL after creating the
+        // Firebase Realtime Database (see setup note at bottom of this file).
+        var FIREBASE_VISITS_URL = 'https://PASTE-YOUR-FIREBASE-DB-URL-HERE/visits'; // e.g. https://salgo-counter-default-rtdb.firebaseio.com/visits
         function initVisitorCounter() {
-            let visits = parseInt(localStorage.getItem('page_visits') || '0', 10) + 1;
-            localStorage.setItem('page_visits', visits.toString());
-            document.getElementById('visitor-count').innerText = visits.toLocaleString();
+            var el = document.getElementById('visitor-count');
+            function show(n) { if (el) el.innerText = Number(n || 0).toLocaleString(); }
+            function already() { try { return sessionStorage.getItem('salgo_counted') === '1'; } catch (e) { return true; } }
+            function mark() { try { sessionStorage.setItem('salgo_counted', '1'); } catch (e) {} }
+            if (FIREBASE_VISITS_URL.indexOf('PASTE-') === 0) return; // not configured yet
+            fetch(FIREBASE_VISITS_URL + '.json?shallow=true').then(function (r) { return r.json(); }).then(function (keys) {
+                var n = keys ? Object.keys(keys).length : 0;
+                if (!already()) {
+                    fetch(FIREBASE_VISITS_URL + '.json', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ t: { '.sv': 'timestamp' } }) })
+                        .then(function () { mark(); show(n + 1); }).catch(function () { show(n); });
+                } else { show(n); }
+            }).catch(function () { /* offline: keep Loading... */ });
         }
 
         // Format Cells: Maximum 3 decimals, <= -2146000000 or "CHECK" -> "No Data"
@@ -857,15 +907,22 @@
                 const tr = document.createElement('tr');
 
                 // This row's ticker, used to build the dashboard link for every
-                // linked column in this row. Prefer the STOCK column; if it's
-                // missing, fall back to whatever's in StockName.
+                // linked column in this row. Prefer the STOCK column (pure ticker
+                // like "LQDA"); fall back to StockName ("LQDA - Liquidia Corp" ->
+                // "LQDA") when STOCK is missing/empty. Trim + split so filenames
+                // always match html_dashboards/{TICKER}_dashboard.html.
+                function extractTicker(v) {
+                    let s = String(v == null ? '' : v).trim();
+                    if (!s || s === 'No Data') return null;
+                    s = s.split(' - ')[0].split(' ')[0].split('-')[0].trim();
+                    return s || null;
+                }
                 let rowTicker = null;
                 if (stockColIndex !== -1) {
-                    const rawTicker = formatCellValue(row[stockColIndex]);
-                    if (rawTicker !== 'No Data') rowTicker = String(rawTicker);
-                } else if (stockNameColIndex !== -1) {
-                    const rawTicker = formatCellValue(row[stockNameColIndex]);
-                    if (rawTicker !== 'No Data') rowTicker = String(rawTicker);
+                    rowTicker = extractTicker(formatCellValue(row[stockColIndex]));
+                }
+                if (!rowTicker && stockNameColIndex !== -1) {
+                    rowTicker = extractTicker(formatCellValue(row[stockNameColIndex]));
                 }
 
                 headers.forEach((_, colIndex) => {
