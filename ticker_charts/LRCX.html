@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAlgo - LRCX charts</title>
+<style>
+
+/* ---- SAlgo shared header (site_layout.py) ---- */
+.sa-header{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  background:#fdf8f1;border:1px solid #efe4d2;border-radius:12px;padding:10px 24px;margin:0 0 20px 0;
+  font-family:'Segoe UI','Inter',system-ui,-apple-system,sans-serif;box-sizing:border-box}
+.sa-brand{display:flex;align-items:center;gap:14px;min-width:0;text-decoration:none}
+.sa-logo{height:56px;width:56px;object-fit:contain;border-radius:8px;background:#fff;flex:0 0 auto}
+.sa-title{display:flex;flex-direction:column;min-width:0}
+.sa-title h1{margin:0;font-size:1.3rem;font-weight:700;color:#1f5f2a;line-height:1.2}
+.sa-title p{margin:2px 0 0 0;font-size:.85rem;color:#6b7280}
+.sa-nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sa-nav a{color:#1f2937;text-decoration:none;font-size:1.02rem;font-weight:500;padding:8px 14px;
+  border-radius:8px;white-space:nowrap;transition:color .15s,background .15s}
+.sa-nav a:hover{color:#a8650a;background:#f6ecdc}
+.sa-nav a.sa-active{color:#a8650a;font-weight:600}
+@media (max-width:760px){
+  .sa-header{padding:10px 14px}
+  .sa-nav{width:100%;overflow-x:auto;flex-wrap:nowrap}
+  .sa-nav a{padding:6px 10px;font-size:.95rem}
+  .sa-logo{height:44px;width:44px}
+}
+
+body{font-family:'Segoe UI','Inter',system-ui,sans-serif;background:#faf6ef;color:#1f2937;margin:0;padding:24px}
+.sa-header{max-width:1280px;margin-left:auto;margin-right:auto}
+.wrap{max-width:1280px;margin:0 auto}
+.muted{color:#6b7280;font-size:.9rem;margin:6px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.card{background:#fff;border:1px solid #e7dcc8;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.rt{display:inline-block;padding:1px 8px;border-radius:6px;font-weight:700;font-size:.72rem;color:#fff}.rt.ow{background:#15803d}.rt.buy{background:#65a30d}.rt.hold{background:#ca8a04}.rt.sell{background:#ea580c}.rt.ssell{background:#b91c1c}.bb{color:#6b7280;font-size:.72rem;margin-top:3px}
+
+#analysis{overflow-x:auto;margin-bottom:16px;line-height:1.5;font-size:.9rem}#analysis p{margin:8px 0}.pt{border-collapse:collapse;margin:8px 0;font-size:.82rem}.pt th,.pt td{border:1px solid #e7dcc8;padding:4px 10px;text-align:left}.pt th{background:#f6ecdc}
+.card h3{margin:0 0 8px;font-size:.95rem}
+.card canvas{width:100%!important;height:220px!important}
+</style></head><body>
+
+<header class="sa-header">
+  <a class="sa-brand" href="../index.html">
+    <img class="sa-logo" src="../LOGO.jpeg" alt="SAlgo logo">
+    <div class="sa-title"><h1>LRCX - Lam Research Corp</h1></div>
+  </a>
+  <nav class="sa-nav" aria-label="SAlgo pages"><a href="../index.html">Screener</a><a href="../StockAnalysis.html">Stock Analysis</a><a href="../strategy1.html">Strategy 1</a><a href="../strategy2.html">Strategy 2</a><a href="../strategy3.html">Strategy 3</a><a href="../strategy4.html">Strategy 4</a><a href="../performance.html">Performance</a></nav>
+</header>
+
+<div class="wrap">
+<div class="muted">Lam Research Corp &middot; 14 monthly snapshots (2024-06-06 &rarr; 2026-11-03)</div>
+<div class="card" id="analysis"><h3>Business analysis <span class="rt buy">BUY</span> <span class="muted">as of 2026-11-08 @ $200.44</span></h3><p><b>Rating: BUY</b> at <b>$200.44</b> (Yahoo, 2026-11-06, NasdaqGS). <b>Buy below: $200.44 now (price is fine up to about $260).</b></p><p><b>Shariah status:</b> LRCX is <b>HALAL</b>, confirmed on the Musaffa website (Nov 2026) and on the Musaffa list. AMAT, KLAC, ASML and TER are HALAL on the Musaffa list; AMAT/ASML/TER were also confirmed on the website where noted in their own entries.</p><p><b>Quality:</b> <b>Excellent.</b> Operating margin about <b>40%</b>, Yahoo free cash flow <b>+$4.5B</b>, cash <b>$7.4B</b> vs debt <b>$3.7B</b> (<b>net cash $3.7B</b>). Moat: a leader in the etching and deposition machines used to make advanced memory and logic chips. Not cash-burning.</p><p><b>Growth:</b> <b>Exceptional.</b> Fiscal Q1 2027 (to September) revenue a record <b>$8.22B (+54.4%)</b>, adjusted EPS <b>$2.20</b>, operating margin <b>40.0%</b> (up 5.6 points). Next quarter is guided to <b>$8.60B (+/- $0.4B)</b>, margin about <b>40.5%</b>, EPS about <b>$2.33</b> (held back by a higher tax rate). One firm expects the 2027 wafer-equipment market at <b>at least $200B</b>, limited by factory cleanroom space. <b>The shares fell 11.8% after the report</b> despite the record.</p><p><b>Price (PEG):</b> Trailing P/E <b>29.9x</b>, forward <b>16.4x</b>, <b>PEG 0.87</b> (Yahoo). Next-year EPS $12.24 vs this year $9.65 is <b>+27%</b>, so the forward PEG is about <b>0.6</b>. The price is <b>54% below its 52-week high</b> ($438.50; low $135.50).</p><p><b>Cyclical:</b> <b>Yes, strongly</b> (chip-factory capex). <b>Middle of an AI-driven upcycle</b>: orders and guidance rise, yet the 54% fall shows investors fear the turn.</p><p><b>Analysts:</b> Yahoo <b>strong buy</b>, <b>30 analysts</b>, mean target <b>$364</b> (+82%). <b>Estimates are rising:</b> this-year EPS $8.22 to <b>$9.65</b> (+17%) and next-year $10.16 to <b>$12.24</b> (+20%) over 90 days. Recent actions (Oct 20-22): UBS, Citigroup, Needham Buy; Morgan Stanley Overweight; Mizuho and Evercore Outperform. <b>TipRanks:</b> not accessible for this review; Yahoo analyst data and recent rating actions were used instead.</p><p><b>Where I disagree:</b> I do not rely on the <b>+82% target</b>. Equipment earnings peak before the cycle turns; the <b>post-results fall and 54% drawdown</b> signal that. At 16x forward earnings I still find it the best-value large name, so I rate it <b>BUY</b>.</p><p><b>Risks:</b> A chip-capex downturn, <b>US export limits on China</b>, customer concentration in memory and a few chipmakers, rising tax rate, and cleanroom-space limits on shipments.</p><p><b>Legal risk:</b> <b>No lawsuit found; some regulatory attention.</b> A <b>House China committee criticised Lam in 2025</b> for slow cooperation on its China sales. A <b>Commerce Department probe into a Korean distributor (Ronda Korea)</b> that sold tools to Chinese buyers is under way; <b>Lam says that firm is not an authorised supplier and that it is cooperating</b>. An <b>old BIS order against Lam (about 2007)</b> concerned a technology release. A 2026 export-penalty result was for a <b>different company (Lambda Research)</b>.</p><p><b>Market stance:</b> the latest view I could find from a well-known, usually bullish Wall Street strategist: constructive, with a year-end 2026 S&amp;P 500 target near 8,000, but he flags a possible pullback to about 7,100-7,200 first and warns that rising Treasury yields could compress valuation multiples even if earnings keep growing (the S&amp;P 500 closed at 7,698.80 on Nov 4). Several sources were undated, and this stance is almost always bullish, so I weight it lightly.</p><p><b>Peer comparison:</b> AMAT is similar but slower; ASML is the strongest business but dearer; TER is faster but narrower. Yahoo data, 6 Nov 2026.</p><table class="pt"><thead><tr><th>Ticker (Company)</th><th>Price</th><th>Fwd P/E</th><th>PEG</th><th>Rev growth</th><th>FCF</th><th>Net debt</th><th>Main risk (incl. legal)</th><th>Recommendation</th></tr></thead><tbody><tr><td><b>LRCX (Lam Research)</b></td><td><b>$200.44</b></td><td>16.4</td><td>0.87</td><td>+54%</td><td>+$4.5B</td><td>net cash $3.7B</td><td>China export rules; Korean distributor probe (cooperating)</td><td><b>BUY; price is fine</b></td></tr><tr><td>AMAT (Applied Materials)</td><td>$332.72</td><td>17.9</td><td>0.70</td><td>+25%</td><td>+$3.1B</td><td>net cash $1.9B</td><td>$252.5M export settlement (Feb 2026)</td><td>Dearer, slower growth</td></tr><tr><td>ASML (ASML Holding)</td><td>$1,424.75</td><td>22.5</td><td>0.74</td><td>+55%</td><td>+$10.4B</td><td>net cash $10.8B</td><td>Open class action (in discovery); China rules</td><td>Best moat, dearer</td></tr><tr><td>KLAC (KLA)</td><td>$138.49</td><td>19.5</td><td>1.25</td><td>+29%</td><td>+$2.8B</td><td>$1.3B</td><td>China exposure</td><td>Dearer, slower</td></tr><tr><td>TER (Teradyne)</td><td>$218.22</td><td>18.2</td><td>0.37</td><td>+70%</td><td>+$601M</td><td>net cash $329M</td><td>No legal issue found</td><td>Faster growth, one-seventh of the cash flow</td></tr></tbody></table><p><b>Conclusion:</b> <b>No better Shariah-compliant stock found; LRCX is the best value among the large chip-equipment names.</b> ASML has the stronger moat but costs <b>22.5x</b>; AMAT and KLAC are dearer with slower growth; TER grows faster from a smaller base. LRCX combines <b>40% margins, $3.7B net cash and the lowest multiple</b>.</p><p><b>Summary &amp; rating:</b> <b>BUY.</b> <b>Buy now; the price is already fine (up to about $260).</b> No better halal peer. A record quarter, rising estimates and strong cash, against <b>a cyclical industry, China export limits and a share price that has already halved</b>. It becomes a HOLD above about <b>$260</b>.</p><div class="muted">Automated opinion from public information, not financial advice.</div></div>
+<div class="grid" id="grid"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const labels = ["2024-06-06", "2024-08-19", "2024-09-20", "2025-09-12", "2025-09-14", "2025-10-22", "2025-10-23", "2025-10-28", "2025-11-03", "2026-01-01", "2026-01-02", "2026-03-01", "2026-04-22", "2026-05-18", "2026-07-09", "2026-07-15", "2026-07-28", "2026-08-28", "2026-09-29", "2026-10-10", "2026-10-13", "2026-11-03"];
+const series = {"Salman Score": [null, null, null, null, null, null, null, null, null, null, null, 13.0, 13.0, 13.0, 13.0, null, null, 9.0, 8.0, 10.0, 10.0, 14.0], "Salman MEGA 6 Score": [null, null, null, null, null, null, null, null, null, null, null, 4.0, 4.0, 5.0, 5.0, null, null, 5.0, 3.0, 4.0, 4.0, 6.0], "Salman Aggressive 4": [null, null, null, null, null, null, null, null, null, null, null, 2.0, 2.0, 3.0, 3.0, null, null, 3.0, 2.0, 4.0, 4.0, 4.0], "UNDERVALUE / OVERVALUE": [null, null, null, null, null, null, null, null, null, null, null, 1.0346, 0.842, 0.8307, 0.3611, null, null, 0.7999, 0.7877, 0.7537, 0.7537, 1.9095], "ROIC %": [null, 30.92, null, null, null, null, null, null, null, null, null, 46.41, 46.41, 48.95, 48.95, null, null, 50.79, 50.79, 56.49, 56.49, 63.91], "Score TTM": [null, null, null, null, null, null, null, null, null, null, null, 87.6282, 87.6282, 88.4615, 88.4615, null, null, 82.3077, 82.3077, 82.3077, 82.3077, 88.2692], "DIFF Score": [null, null, null, null, null, null, null, null, null, null, null, -3.3974, -3.3974, -2.5641, -2.5641, null, null, 3.6538, 3.6538, 3.6538, 3.6538, 9.6154], "Earnings Power": [null, 290.1746, null, null, null, null, null, null, null, null, null, 35.8718, 35.8718, 36.1444, 36.1444, null, null, 40.209, 40.6275, 40.6365, 40.6365, 43.8809], "Average Estimate": [877.1107, 923.9414, null, null, null, null, null, null, null, null, null, 486.4194, 486.4194, 529.5206, 529.5206, null, 314.2754, 565.1828, 562.191, 562.2103, 562.2103, 695.6988], "Revenue Growth (%) 12 months": [-22.1, -12.0, null, null, null, null, null, null, null, null, null, 30.0, 30.0, 29.8, 29.8, null, null, 28.9, 28.9, 28.9, 28.9, 35.8], "Free Cash Flow Growth (%) 12 months": [18.0, -6.4, null, null, null, null, null, null, null, null, null, 57.3, 57.3, 62.0, 62.0, null, null, -7.6, -7.6, -7.6, -7.6, 19.8], "Book Value Growth (%) 12 months": [-1.7, 6.3, null, null, null, null, null, null, null, null, null, 18.3, 18.3, 14.2, 14.2, null, null, 28.2, 28.2, 28.2, 28.2, 37.5], "DIFF NET INCOME % TTM": [null, null, null, null, null, null, null, null, null, null, null, 13.7637, 13.7637, 20.1244, 20.1244, null, null, 0.0, 0.0, 0.0001, 0.0001, 14.0177], "DIFF NET Margin %": [null, null, null, null, null, null, null, null, null, null, null, 1.16, 1.16, 1.879, 1.879, null, null, 0.002, 0.0, -0.002, -0.002, 1.068], "Net Margin %_TTM": [null, 25.68, null, null, null, null, null, null, null, null, null, 30.22, 30.22, 30.939, 30.939, null, null, 31.272, 31.272, 31.27, 31.27, 32.34], "DIFF EPS TTM": [null, null, null, null, null, null, null, null, null, null, null, 14.898, 14.898, 21.6165, 21.6165, null, null, 0.0, 0.0483, 0.0173, 0.0173, 14.237], "EPS (Basic)TTM": [null, 29.13, null, null, null, null, null, null, null, null, null, 4.9, 4.9, 5.32, 5.32, null, null, 5.79, 5.7916, 5.79, 5.79, 6.75], "ThirdParty+FCF": [null, null, null, null, null, null, null, null, null, null, null, 134.6547, 134.6547, 89.3862, 89.3862, null, null, 51.1509, 65.8568, 58.5038, 58.5038, 200.0]};
+const colors = {"Salman Score": "#059669", "Salman MEGA 6 Score": "#2563eb", "Salman Aggressive 4": "#d97706", "UNDERVALUE / OVERVALUE": "#7c3aed", "ROIC %": "#0284c7", "Score TTM": "#ca8a04", "DIFF Score": "#dc2626", "Earnings Power": "#0d9488", "Average Estimate": "#e11d48", "Revenue Growth (%) 12 months": "#4f46e5", "Free Cash Flow Growth (%) 12 months": "#65a30d", "Book Value Growth (%) 12 months": "#16a34a", "DIFF NET INCOME % TTM": "#78350f", "DIFF NET Margin %": "#334155", "Net Margin %_TTM": "#155e75", "DIFF EPS TTM": "#be185d", "EPS (Basic)TTM": "#14532d", "ThirdParty+FCF": "#9a3412"};
+const grid = document.getElementById('grid');
+Object.keys(series).forEach(p => {
+  const card = document.createElement('div'); card.className = 'card';
+  card.innerHTML = '<h3></h3><canvas></canvas>'; card.querySelector('h3').textContent = p;
+  grid.appendChild(card);
+  new Chart(card.querySelector('canvas'), {
+    type: 'line',
+    data: { labels, datasets: [{ label: p, data: series[p], borderColor: colors[p], backgroundColor: colors[p],
+             spanGaps: true, tension: 0.25, pointRadius: 3, borderWidth: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+               scales: { x: { ticks: { maxTicksLimit: 8 } } } }
+  });
+});
+</script></body></html>

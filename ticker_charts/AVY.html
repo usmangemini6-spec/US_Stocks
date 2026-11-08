@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAlgo - AVY charts</title>
+<style>
+
+/* ---- SAlgo shared header (site_layout.py) ---- */
+.sa-header{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  background:#fdf8f1;border:1px solid #efe4d2;border-radius:12px;padding:10px 24px;margin:0 0 20px 0;
+  font-family:'Segoe UI','Inter',system-ui,-apple-system,sans-serif;box-sizing:border-box}
+.sa-brand{display:flex;align-items:center;gap:14px;min-width:0;text-decoration:none}
+.sa-logo{height:56px;width:56px;object-fit:contain;border-radius:8px;background:#fff;flex:0 0 auto}
+.sa-title{display:flex;flex-direction:column;min-width:0}
+.sa-title h1{margin:0;font-size:1.3rem;font-weight:700;color:#1f5f2a;line-height:1.2}
+.sa-title p{margin:2px 0 0 0;font-size:.85rem;color:#6b7280}
+.sa-nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sa-nav a{color:#1f2937;text-decoration:none;font-size:1.02rem;font-weight:500;padding:8px 14px;
+  border-radius:8px;white-space:nowrap;transition:color .15s,background .15s}
+.sa-nav a:hover{color:#a8650a;background:#f6ecdc}
+.sa-nav a.sa-active{color:#a8650a;font-weight:600}
+@media (max-width:760px){
+  .sa-header{padding:10px 14px}
+  .sa-nav{width:100%;overflow-x:auto;flex-wrap:nowrap}
+  .sa-nav a{padding:6px 10px;font-size:.95rem}
+  .sa-logo{height:44px;width:44px}
+}
+
+body{font-family:'Segoe UI','Inter',system-ui,sans-serif;background:#faf6ef;color:#1f2937;margin:0;padding:24px}
+.sa-header{max-width:1280px;margin-left:auto;margin-right:auto}
+.wrap{max-width:1280px;margin:0 auto}
+.muted{color:#6b7280;font-size:.9rem;margin:6px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.card{background:#fff;border:1px solid #e7dcc8;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.rt{display:inline-block;padding:1px 8px;border-radius:6px;font-weight:700;font-size:.72rem;color:#fff}.rt.ow{background:#15803d}.rt.buy{background:#65a30d}.rt.hold{background:#ca8a04}.rt.sell{background:#ea580c}.rt.ssell{background:#b91c1c}.bb{color:#6b7280;font-size:.72rem;margin-top:3px}
+
+#analysis{overflow-x:auto;margin-bottom:16px;line-height:1.5;font-size:.9rem}#analysis p{margin:8px 0}.pt{border-collapse:collapse;margin:8px 0;font-size:.82rem}.pt th,.pt td{border:1px solid #e7dcc8;padding:4px 10px;text-align:left}.pt th{background:#f6ecdc}
+.card h3{margin:0 0 8px;font-size:.95rem}
+.card canvas{width:100%!important;height:220px!important}
+</style></head><body>
+
+<header class="sa-header">
+  <a class="sa-brand" href="../index.html">
+    <img class="sa-logo" src="../LOGO.jpeg" alt="SAlgo logo">
+    <div class="sa-title"><h1>AVY - Avery Dennison Corp</h1></div>
+  </a>
+  <nav class="sa-nav" aria-label="SAlgo pages"><a href="../index.html">Screener</a><a href="../StockAnalysis.html">Stock Analysis</a><a href="../strategy1.html">Strategy 1</a><a href="../strategy2.html">Strategy 2</a><a href="../strategy3.html">Strategy 3</a><a href="../strategy4.html">Strategy 4</a><a href="../performance.html">Performance</a></nav>
+</header>
+
+<div class="wrap">
+<div class="muted">Avery Dennison Corp &middot; 12 monthly snapshots (2024-08-19 &rarr; 2026-11-03)</div>
+
+<div class="grid" id="grid"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const labels = ["2024-06-06", "2024-08-19", "2024-09-20", "2025-09-12", "2025-09-14", "2025-10-22", "2025-10-23", "2025-10-28", "2025-11-03", "2026-01-01", "2026-01-02", "2026-03-01", "2026-04-22", "2026-05-18", "2026-07-09", "2026-07-15", "2026-07-28", "2026-08-28", "2026-09-29", "2026-10-10", "2026-10-13", "2026-11-03"];
+const series = {"Salman Score": [null, null, null, null, null, null, null, null, null, null, null, 7.0, null, 10.0, 10.0, null, null, 12.0, 12.0, 13.0, 13.0, -2146826281.0], "Salman MEGA 6 Score": [null, null, null, null, null, null, null, null, null, null, null, 2.0, null, 4.0, 4.0, null, null, 4.0, 4.0, 5.0, 5.0, -2146826281.0], "Salman Aggressive 4": [null, null, null, null, null, null, null, null, null, null, null, 1.0, null, 3.0, 3.0, null, null, 3.0, 3.0, 4.0, 4.0, -2146826281.0], "UNDERVALUE / OVERVALUE": [null, null, null, null, null, null, null, null, null, null, null, 0.1495, null, 0.4774, 0.4763, null, null, 0.469, 0.5897, 0.6197, 0.6197, -2146826281.0], "ROIC %": [null, 11.67, null, null, null, null, null, null, null, null, null, 12.0, null, 12.11, 12.11, null, null, 12.23, 12.39, 17.13, 17.13, 16.98], "Score TTM": [null, null, null, null, null, null, null, null, null, null, null, 54.4231, null, 63.7179, 63.7179, null, null, 75.2564, 73.3333, 73.3333, 73.3333, 65.0], "DIFF Score": [null, null, null, null, null, null, null, null, null, null, null, 15.0641, null, 24.359, 24.359, null, null, 35.8974, 25.641, 25.641, 25.641, 17.3077], "Earnings Power": [null, 73.3513, null, null, null, null, null, null, null, null, null, 67.7753, null, 68.2284, 68.1058, null, null, 71.7996, 72.6958, 72.7714, 72.7714, -2146826281.0], "Average Estimate": [null, 149.1637, null, null, null, null, null, null, null, null, null, 221.617, null, 234.5293, 234.2609, null, 4.7239, 269.8682, 271.4845, 271.4975, 271.4975, -2146826281.0], "Revenue Growth (%) 12 months": [null, 1.8, null, null, null, null, null, null, null, null, null, 4.2, null, 6.4, 6.4, null, null, 9.2, 9.3, 9.3, 9.3, 10.0], "Free Cash Flow Growth (%) 12 months": [null, 53.4, null, null, null, null, null, null, null, null, null, 0.4, null, 51.8, 51.8, null, null, 77.7, 73.5, 73.5, 73.5, 56.2], "Book Value Growth (%) 12 months": [null, 13.6, null, null, null, null, null, null, null, null, null, 0.1, null, 8.2, 8.6, null, null, 8.5, 8.5, 8.5, 8.5, 10.4], "DIFF NET INCOME % TTM": [null, null, null, null, null, null, null, null, null, null, null, 0.0, null, 0.2609, 0.2609, null, null, 2.3975, 2.3975, 2.3975, 2.3975, 2.866], "DIFF NET Margin %": [null, null, null, null, null, null, null, null, null, null, null, -0.001, null, -0.11, -0.11, null, null, -0.148, -0.147, -0.149, -0.149, -0.209], "Net Margin %_TTM": [null, 7.336, null, null, null, null, null, null, null, null, null, 7.769, null, 7.66, 7.66, null, null, 7.622, 7.622, 7.62, 7.62, 7.56], "DIFF EPS TTM": [null, null, null, null, null, null, null, null, null, null, null, -0.7128, null, 1.089, 1.0557, null, null, 3.9887, 3.8622, 3.8319, 3.8319, -25.3058], "EPS (Basic)TTM": [null, 7.828, null, null, null, null, null, null, null, null, null, 8.838, null, 8.907, 8.904, null, null, 9.176, 9.1631, 9.16, 9.16, 7.03], "ThirdParty+FCF": [null, null, null, null, null, null, null, null, null, null, null, 22.0588, null, 177.9412, 177.9412, null, null, 177.9412, 177.9412, 177.9412, 177.9412, -2146826273.0]};
+const colors = {"Salman Score": "#059669", "Salman MEGA 6 Score": "#2563eb", "Salman Aggressive 4": "#d97706", "UNDERVALUE / OVERVALUE": "#7c3aed", "ROIC %": "#0284c7", "Score TTM": "#ca8a04", "DIFF Score": "#dc2626", "Earnings Power": "#0d9488", "Average Estimate": "#e11d48", "Revenue Growth (%) 12 months": "#4f46e5", "Free Cash Flow Growth (%) 12 months": "#65a30d", "Book Value Growth (%) 12 months": "#16a34a", "DIFF NET INCOME % TTM": "#78350f", "DIFF NET Margin %": "#334155", "Net Margin %_TTM": "#155e75", "DIFF EPS TTM": "#be185d", "EPS (Basic)TTM": "#14532d", "ThirdParty+FCF": "#9a3412"};
+const grid = document.getElementById('grid');
+Object.keys(series).forEach(p => {
+  const card = document.createElement('div'); card.className = 'card';
+  card.innerHTML = '<h3></h3><canvas></canvas>'; card.querySelector('h3').textContent = p;
+  grid.appendChild(card);
+  new Chart(card.querySelector('canvas'), {
+    type: 'line',
+    data: { labels, datasets: [{ label: p, data: series[p], borderColor: colors[p], backgroundColor: colors[p],
+             spanGaps: true, tension: 0.25, pointRadius: 3, borderWidth: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+               scales: { x: { ticks: { maxTicksLimit: 8 } } } }
+  });
+});
+</script></body></html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAlgo - OMCL charts</title>
+<style>
+
+/* ---- SAlgo shared header (site_layout.py) ---- */
+.sa-header{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  background:#fdf8f1;border:1px solid #efe4d2;border-radius:12px;padding:10px 24px;margin:0 0 20px 0;
+  font-family:'Segoe UI','Inter',system-ui,-apple-system,sans-serif;box-sizing:border-box}
+.sa-brand{display:flex;align-items:center;gap:14px;min-width:0;text-decoration:none}
+.sa-logo{height:56px;width:56px;object-fit:contain;border-radius:8px;background:#fff;flex:0 0 auto}
+.sa-title{display:flex;flex-direction:column;min-width:0}
+.sa-title h1{margin:0;font-size:1.3rem;font-weight:700;color:#1f5f2a;line-height:1.2}
+.sa-title p{margin:2px 0 0 0;font-size:.85rem;color:#6b7280}
+.sa-nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sa-nav a{color:#1f2937;text-decoration:none;font-size:1.02rem;font-weight:500;padding:8px 14px;
+  border-radius:8px;white-space:nowrap;transition:color .15s,background .15s}
+.sa-nav a:hover{color:#a8650a;background:#f6ecdc}
+.sa-nav a.sa-active{color:#a8650a;font-weight:600}
+@media (max-width:760px){
+  .sa-header{padding:10px 14px}
+  .sa-nav{width:100%;overflow-x:auto;flex-wrap:nowrap}
+  .sa-nav a{padding:6px 10px;font-size:.95rem}
+  .sa-logo{height:44px;width:44px}
+}
+
+body{font-family:'Segoe UI','Inter',system-ui,sans-serif;background:#faf6ef;color:#1f2937;margin:0;padding:24px}
+.sa-header{max-width:1280px;margin-left:auto;margin-right:auto}
+.wrap{max-width:1280px;margin:0 auto}
+.muted{color:#6b7280;font-size:.9rem;margin:6px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.card{background:#fff;border:1px solid #e7dcc8;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.rt{display:inline-block;padding:1px 8px;border-radius:6px;font-weight:700;font-size:.72rem;color:#fff}.rt.ow{background:#15803d}.rt.buy{background:#65a30d}.rt.hold{background:#ca8a04}.rt.sell{background:#ea580c}.rt.ssell{background:#b91c1c}.bb{color:#6b7280;font-size:.72rem;margin-top:3px}
+
+#analysis{overflow-x:auto;margin-bottom:16px;line-height:1.5;font-size:.9rem}#analysis p{margin:8px 0}.pt{border-collapse:collapse;margin:8px 0;font-size:.82rem}.pt th,.pt td{border:1px solid #e7dcc8;padding:4px 10px;text-align:left}.pt th{background:#f6ecdc}
+.card h3{margin:0 0 8px;font-size:.95rem}
+.card canvas{width:100%!important;height:220px!important}
+</style></head><body>
+
+<header class="sa-header">
+  <a class="sa-brand" href="../index.html">
+    <img class="sa-logo" src="../LOGO.jpeg" alt="SAlgo logo">
+    <div class="sa-title"><h1>OMCL - Omnicell Inc</h1></div>
+  </a>
+  <nav class="sa-nav" aria-label="SAlgo pages"><a href="../index.html">Screener</a><a href="../StockAnalysis.html">Stock Analysis</a><a href="../strategy1.html">Strategy 1</a><a href="../strategy2.html">Strategy 2</a><a href="../strategy3.html">Strategy 3</a><a href="../strategy4.html">Strategy 4</a><a href="../performance.html">Performance</a></nav>
+</header>
+
+<div class="wrap">
+<div class="muted">Omnicell Inc &middot; 14 monthly snapshots (2024-06-06 &rarr; 2026-11-03)</div>
+<div class="card" id="analysis"><h3>Business analysis <span class="rt hold">HOLD</span> <span class="muted">as of 2026-11-08 @ $37.34</span></h3><p><b>Rating: HOLD</b> at <b>$37.34</b> (Yahoo, 2026-11-06, NasdaqGS). <b>Buy below: $32 (about 16x next-year EPS of $2.01).</b></p><p><b>Shariah status:</b> OMCL is <b>HALAL</b> (Musaffa list, 31 Oct 2026). CVLT is <b>HALAL</b> on the same list. PRGS and EVH are <b>not on the list</b> and are <b>not compared</b>.</p><p><b>Quality:</b> <b>Fair-to-good.</b> GAAP operating margin only about <b>5%</b> (non-GAAP EBITDA about 15%), Yahoo free cash flow <b>+$136M</b>, cash <b>$315M</b> vs debt <b>$201M</b> (<b>net cash $114M</b>). Moat: hospital medication-dispensing cabinets and pharmacy automation with sticky installed bases. Not cash-burning.</p><p><b>Growth:</b> <b>Profit improving, sales flat.</b> Q3 2026 revenue about <b>$308M</b>, above the top of its guide, with non-GAAP EBITDA of <b>$45M</b> (guide $32-37M). <b>Full-year guidance:</b> revenue <b>narrowed to $1.225-1.231B</b> (top end cut from $1.245B), non-GAAP EBITDA <b>raised to $187-193M</b>, non-GAAP EPS <b>$2.48-2.56</b>. Revenue is about <b>-1%</b>. <b>Q4 revenue guidance is softer and the low end of 2026 product bookings is $425M</b>, showing hospitals&#x27; buying is uncertain.</p><p><b>Price (PEG):</b> Trailing GAAP P/E <b>38.9x</b>, forward <b>18.6x</b>, Yahoo&#x27;s PEG of <b>15.4 is not meaningful</b>. Next-year EPS ($2.01) is <b>below this year&#x27;s $2.48</b>, so the forward multiple rests on a <b>lower</b> EPS. The price is <b>32% below its 52-week high</b> ($55.00; low $31.80).</p><p><b>Cyclical:</b> <b>Partly</b> (hospital capital budgets). <b>Middle of the cycle</b>; hospitals are cautious on large purchases.</p><p><b>Analysts:</b> Yahoo <b>strong buy</b>, 7 analysts, mean target <b>$57.40</b> (+54%). <b>Estimates mixed:</b> this-year EPS $2.28 to <b>$2.48</b> (+9%) after the beat, but next-year EPS <b>$2.09 to $2.01 (-4%)</b>. Recent actions: Freedom Capital Buy (Oct 31), Piper Sandler, Wells Fargo and KeyBanc Overweight (reiterated). <b>TipRanks:</b> not accessible for this review; Yahoo analyst data and recent rating actions were used instead.</p><p><b>Where I disagree:</b> I disagree with the <b>+54% target</b>. <b>Next-year EPS estimates are being cut</b>, revenue is not growing, and bookings guidance is soft. I rate it <b>HOLD</b> until the order trend improves.</p><p><b>Risks:</b> Hospital budget delays, falling bookings, thin GAAP margins, a data-breach notice (below), debt, and a small analyst panel of seven.</p><p><b>Legal risk:</b> <b>One 2026 item, not a case.</b> On <b>23 Jul 2026</b> law firm Migliaccio &amp; Rathod announced an <b>investigation of a possible data breach</b> after dark-web sites named Omnicell a victim (nature unconfirmed). <b>Older securities class actions (2014-15 and 2018-19)</b> are not current. <b>No 2026 securities suit found.</b></p><p><b>Market stance:</b> the latest view I could find from a well-known, usually bullish Wall Street strategist: constructive, with a year-end 2026 S&amp;P 500 target near 8,000, but he flags a possible pullback to about 7,100-7,200 first and warns that rising Treasury yields could compress valuation multiples even if earnings keep growing (the S&amp;P 500 closed at 7,698.80 on Nov 4). Several sources were undated, and this stance is almost always bullish, so I weight it lightly.</p><p><b>Peer comparison:</b> CVLT is the only compliant peer with data; it is dearer and in a lawsuit. Yahoo data, 6 Nov 2026.</p><table class="pt"><thead><tr><th>Ticker (Company)</th><th>Price</th><th>Fwd P/E</th><th>PEG</th><th>Rev growth</th><th>FCF</th><th>Net debt</th><th>Main risk (incl. legal)</th><th>Recommendation</th></tr></thead><tbody><tr><td><b>OMCL (Omnicell)</b></td><td><b>$37.34</b></td><td>18.6</td><td>15.4 (n/m)</td><td>-1%</td><td>+$136M</td><td>net cash $114M</td><td>Data-breach investigation (Jul 2026); soft bookings</td><td><b>HOLD; buy below $32</b></td></tr><tr><td>CVLT (Commvault)</td><td>$158.36</td><td>25.2</td><td>3.17</td><td>+13%</td><td>+$322M</td><td>$24M</td><td><b>Securities class action (D.N.J. 26-cv-05654) and derivative suit</b></td><td>Dearer, faster growth, in court</td></tr></tbody></table><p><b>Conclusion:</b> <b>No clearly better Shariah-compliant stock found.</b> CVLT grows faster (+13%) but is <b>dearer (25.2x vs 18.6x) and faces a securities class action</b>. OMCL has <b>net cash and the cheaper multiple</b>, but flat revenue.</p><p><b>Summary &amp; rating:</b> <b>HOLD.</b> <b>Buy OMCL only below about $32</b> (about 16x next-year EPS of $2.01). No better halal peer. Strengths: <b>beat-and-raise profits, net cash</b>. Risks: <b>falling next-year EPS, soft hospital bookings and the breach inquiry</b>. It becomes a BUY near <b>$32</b>.</p><div class="muted">Automated opinion from public information, not financial advice.</div></div>
+<div class="grid" id="grid"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const labels = ["2024-06-06", "2024-08-19", "2024-09-20", "2025-09-12", "2025-09-14", "2025-10-22", "2025-10-23", "2025-10-28", "2025-11-03", "2026-01-01", "2026-01-02", "2026-03-01", "2026-04-22", "2026-05-18", "2026-07-09", "2026-07-15", "2026-07-28", "2026-08-28", "2026-09-29", "2026-10-10", "2026-10-13", "2026-11-03"];
+const series = {"Salman Score": [null, null, null, null, null, 12.0, null, null, null, null, null, 5.0, null, 9.0, 9.0, null, null, 14.0, 14.0, 14.0, 14.0, 14.0], "Salman MEGA 6 Score": [null, null, null, null, null, 5.0, null, null, null, null, null, 1.0, null, 4.0, 4.0, null, null, 6.0, 6.0, 6.0, 6.0, 5.0], "Salman Aggressive 4": [null, null, null, null, null, 3.0, null, null, null, null, null, 0.0, null, 3.0, 3.0, null, null, 4.0, 4.0, 4.0, 4.0, 3.0], "UNDERVALUE / OVERVALUE": [null, null, null, null, null, 0.1286, null, null, null, null, null, -0.3907, null, -0.1982, -0.1038, null, null, 0.2387, 0.3821, 0.3598, 0.3598, 0.3469], "ROIC %": [null, null, null, null, null, 0.55, null, null, null, null, null, 0.06, null, 1.09, 1.08, null, null, 2.3, 2.26, 3.64, 3.64, 4.16], "Score TTM": [null, null, null, null, null, 52.1795, null, null, null, null, null, 44.9359, null, 51.6026, 51.6026, null, null, 79.8077, 79.8077, 79.8077, 79.8077, 85.8974], "DIFF Score": [null, null, null, null, null, 5.7051, null, null, null, null, null, -0.8333, null, 5.8333, 5.8333, null, null, 34.0385, 35.3205, 35.3205, 35.3205, 41.4103], "Earnings Power": [null, null, null, null, null, 7.2737, null, null, null, null, null, 3.0137, null, 3.9392, 4.2573, null, null, 5.4054, 7.2244, 7.2361, 7.2361, 11.2819], "Average Estimate": [26.1799, null, null, null, null, 33.5074, null, null, null, null, null, 25.5434, null, 34.6132, 34.6662, null, 24.8206, 44.0594, 47.3643, 47.3625, 47.3625, 49.364], "Revenue Growth (%) 12 months": [-13.3, null, null, null, null, 3.9, null, null, null, null, null, 6.3, null, 9.1, 9.1, null, null, 10.6, 10.7, 10.7, 10.7, 7.1], "Free Cash Flow Growth (%) 12 months": [234.9, null, null, null, null, -42.7, null, null, null, null, null, -48.7, null, -8.1, -8.1, null, null, 45.1, 33.6, 33.6, 33.6, 30.5], "Book Value Growth (%) 12 months": [2.1, null, null, null, null, 4.1, null, null, null, null, null, 2.4, null, 3.0, 3.0, null, null, 4.0, 4.0, 4.0, 4.0, 4.2], "DIFF NET INCOME % TTM": [null, null, null, null, null, 45.7251, null, null, null, null, null, 0.0, null, 89.9574, 89.9574, null, null, 94.7496, 94.7496, 94.7492, 94.7492, 95.4063], "DIFF NET Margin %": [null, null, null, null, null, 0.878, null, null, null, null, null, 0.003, null, 1.498, 1.498, null, null, 2.965, 2.962, 2.957, 2.957, 3.417], "Net Margin %_TTM": [null, null, null, null, null, 2.008, null, null, null, null, null, 0.173, null, 1.668, 1.668, null, null, 3.135, 3.135, 3.13, 3.13, 3.59], "DIFF EPS TTM": [null, null, null, null, null, 46.0, null, null, null, null, null, -0.0, null, 90.9091, 90.9091, null, null, 95.2941, 94.8019, 94.7674, 94.7674, 95.4082], "EPS (Basic)TTM": [null, null, null, null, null, 0.5, null, null, null, null, null, 0.04, null, 0.44, 0.44, null, null, 0.85, 0.858, 0.86, 0.86, 0.98], "ThirdParty+FCF": [null, null, null, null, null, 94.9488, null, null, null, null, null, 36.445, null, 192.6471, 192.6471, null, null, 192.6471, 192.6471, 192.6471, 192.6471, 192.6471]};
+const colors = {"Salman Score": "#059669", "Salman MEGA 6 Score": "#2563eb", "Salman Aggressive 4": "#d97706", "UNDERVALUE / OVERVALUE": "#7c3aed", "ROIC %": "#0284c7", "Score TTM": "#ca8a04", "DIFF Score": "#dc2626", "Earnings Power": "#0d9488", "Average Estimate": "#e11d48", "Revenue Growth (%) 12 months": "#4f46e5", "Free Cash Flow Growth (%) 12 months": "#65a30d", "Book Value Growth (%) 12 months": "#16a34a", "DIFF NET INCOME % TTM": "#78350f", "DIFF NET Margin %": "#334155", "Net Margin %_TTM": "#155e75", "DIFF EPS TTM": "#be185d", "EPS (Basic)TTM": "#14532d", "ThirdParty+FCF": "#9a3412"};
+const grid = document.getElementById('grid');
+Object.keys(series).forEach(p => {
+  const card = document.createElement('div'); card.className = 'card';
+  card.innerHTML = '<h3></h3><canvas></canvas>'; card.querySelector('h3').textContent = p;
+  grid.appendChild(card);
+  new Chart(card.querySelector('canvas'), {
+    type: 'line',
+    data: { labels, datasets: [{ label: p, data: series[p], borderColor: colors[p], backgroundColor: colors[p],
+             spanGaps: true, tension: 0.25, pointRadius: 3, borderWidth: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+               scales: { x: { ticks: { maxTicksLimit: 8 } } } }
+  });
+});
+</script></body></html>

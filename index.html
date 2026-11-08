@@ -96,22 +96,6 @@
 
 
 
-        .visitor-counter-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #f0fdf4;
-            padding: 10px 18px;
-            border-radius: 8px;
-            border: 1px solid #bbf7d0;
-            margin: 0 0 12px auto;
-            width: fit-content;
-        }
-        .visitor-counter-box .count-value {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--accent-color);
-        }
 
         /* Release Date Bar -- EDIT THE DATE TEXT BELOW BY HAND WHEN YOU REFRESH DATA */
         .release-date-bar {
@@ -552,10 +536,6 @@
   <nav class="sa-nav" aria-label="SAlgo pages"><a href="index.html" class="sa-active" aria-current="page">Screener</a><a href="StockAnalysis.html">Stock Analysis</a><a href="strategy1.html">Strategy 1</a><a href="strategy2.html">Strategy 2</a><a href="strategy3.html">Strategy 3</a><a href="strategy4.html">Strategy 4</a><a href="performance.html">Performance</a></nav>
 </header>
 
-    <div class="visitor-counter-box">
-        <span>👁️ Visitors:</span>
-        <span class="count-value" id="visitor-count">Loading...</span>
-    </div>
 
     <!-- Release Date -- EDIT THE DATE TEXT DIRECTLY IN THIS HTML FILE EACH TIME YOU UPDATE THE DATA -->
     <div class="release-date-bar">
@@ -625,13 +605,6 @@
         });
 
         // Format Cells: Maximum 3 decimals, <= -2146000000 or "CHECK" -> "No Data"
-        // Visitor Counter
-        function initVisitorCounter() {
-            let visits = parseInt(localStorage.getItem('page_visits') || '0', 10) + 1;
-            localStorage.setItem('page_visits', visits.toString());
-            document.getElementById('visitor-count').innerText = visits.toLocaleString();
-        }
-
         function formatCellValue(val) {
             if (val === null || val === undefined || val === '') return 'No Data';
 
@@ -1249,7 +1222,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             renderTable();
-            initVisitorCounter();
         });
     </script>
 </body>

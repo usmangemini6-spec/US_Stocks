@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAlgo - MU charts</title>
+<style>
+
+/* ---- SAlgo shared header (site_layout.py) ---- */
+.sa-header{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  background:#fdf8f1;border:1px solid #efe4d2;border-radius:12px;padding:10px 24px;margin:0 0 20px 0;
+  font-family:'Segoe UI','Inter',system-ui,-apple-system,sans-serif;box-sizing:border-box}
+.sa-brand{display:flex;align-items:center;gap:14px;min-width:0;text-decoration:none}
+.sa-logo{height:56px;width:56px;object-fit:contain;border-radius:8px;background:#fff;flex:0 0 auto}
+.sa-title{display:flex;flex-direction:column;min-width:0}
+.sa-title h1{margin:0;font-size:1.3rem;font-weight:700;color:#1f5f2a;line-height:1.2}
+.sa-title p{margin:2px 0 0 0;font-size:.85rem;color:#6b7280}
+.sa-nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sa-nav a{color:#1f2937;text-decoration:none;font-size:1.02rem;font-weight:500;padding:8px 14px;
+  border-radius:8px;white-space:nowrap;transition:color .15s,background .15s}
+.sa-nav a:hover{color:#a8650a;background:#f6ecdc}
+.sa-nav a.sa-active{color:#a8650a;font-weight:600}
+@media (max-width:760px){
+  .sa-header{padding:10px 14px}
+  .sa-nav{width:100%;overflow-x:auto;flex-wrap:nowrap}
+  .sa-nav a{padding:6px 10px;font-size:.95rem}
+  .sa-logo{height:44px;width:44px}
+}
+
+body{font-family:'Segoe UI','Inter',system-ui,sans-serif;background:#faf6ef;color:#1f2937;margin:0;padding:24px}
+.sa-header{max-width:1280px;margin-left:auto;margin-right:auto}
+.wrap{max-width:1280px;margin:0 auto}
+.muted{color:#6b7280;font-size:.9rem;margin:6px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.card{background:#fff;border:1px solid #e7dcc8;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.rt{display:inline-block;padding:1px 8px;border-radius:6px;font-weight:700;font-size:.72rem;color:#fff}.rt.ow{background:#15803d}.rt.buy{background:#65a30d}.rt.hold{background:#ca8a04}.rt.sell{background:#ea580c}.rt.ssell{background:#b91c1c}.bb{color:#6b7280;font-size:.72rem;margin-top:3px}
+
+#analysis{overflow-x:auto;margin-bottom:16px;line-height:1.5;font-size:.9rem}#analysis p{margin:8px 0}.pt{border-collapse:collapse;margin:8px 0;font-size:.82rem}.pt th,.pt td{border:1px solid #e7dcc8;padding:4px 10px;text-align:left}.pt th{background:#f6ecdc}
+.card h3{margin:0 0 8px;font-size:.95rem}
+.card canvas{width:100%!important;height:220px!important}
+</style></head><body>
+
+<header class="sa-header">
+  <a class="sa-brand" href="../index.html">
+    <img class="sa-logo" src="../LOGO.jpeg" alt="SAlgo logo">
+    <div class="sa-title"><h1>MU - Micron Technology Inc</h1></div>
+  </a>
+  <nav class="sa-nav" aria-label="SAlgo pages"><a href="../index.html">Screener</a><a href="../StockAnalysis.html">Stock Analysis</a><a href="../strategy1.html">Strategy 1</a><a href="../strategy2.html">Strategy 2</a><a href="../strategy3.html">Strategy 3</a><a href="../strategy4.html">Strategy 4</a><a href="../performance.html">Performance</a></nav>
+</header>
+
+<div class="wrap">
+<div class="muted">Micron Technology Inc &middot; 17 monthly snapshots (2024-06-06 &rarr; 2026-11-03)</div>
+
+<div class="grid" id="grid"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const labels = ["2024-06-06", "2024-08-19", "2024-09-20", "2025-09-12", "2025-09-14", "2025-10-22", "2025-10-23", "2025-10-28", "2025-11-03", "2026-01-01", "2026-01-02", "2026-03-01", "2026-04-22", "2026-05-18", "2026-07-09", "2026-07-15", "2026-07-28", "2026-08-28", "2026-09-29", "2026-10-10", "2026-10-13", "2026-11-03"];
+const series = {"Salman Score": [null, null, null, null, 9.0, 9.0, null, null, null, null, null, 10.0, 11.0, 11.0, 11.0, null, null, 12.0, 11.0, 9.0, 9.0, 9.0], "Salman MEGA 6 Score": [null, null, null, null, 4.0, 4.0, null, null, null, null, null, 3.0, 3.0, 3.0, 3.0, null, null, 4.0, 3.0, 4.0, 4.0, 4.0], "Salman Aggressive 4": [null, null, null, null, 3.0, 2.0, null, null, null, null, null, 3.0, 3.0, 3.0, 3.0, null, null, 3.0, 3.0, 3.0, 3.0, 3.0], "UNDERVALUE / OVERVALUE": [null, null, null, null, -0.7396, -0.379, null, null, null, null, null, -0.5247, -0.106, -0.434, -0.6174, null, null, 0.0548, -0.0532, 2.49, 2.49, 3.086], "ROIC %": [null, null, null, 11.13, 11.13, 14.89, null, null, null, null, null, 19.93, 37.64, 37.64, 37.64, null, null, 71.13, 71.13, 110.32, 110.32, 107.23], "Score TTM": [null, null, null, null, 40.8333, 72.7564, null, null, null, null, null, 84.2949, 91.3462, 91.3462, 91.3462, null, null, 91.3462, 91.3462, 93.2692, 93.2692, 93.2692], "DIFF Score": [null, null, null, null, 5.7692, 25.1923, null, null, null, null, null, 36.7308, 43.7821, 43.7821, 43.7821, null, null, 43.7821, 43.7821, 0.3205, 0.3205, 0.3205], "Earnings Power": [null, null, null, -39.2091, -39.6439, -55.8016, null, null, null, null, null, -45.2628, -16.6353, -16.6353, -16.6353, null, null, -43.6011, -41.2258, -5.6508, -5.6508, -5.6269], "Average Estimate": [-18.5374, null, null, 28.4129, 41.0521, 121.7442, null, null, null, null, null, 203.8834, 433.8578, 433.8578, 433.8578, null, 1066.9492, 1019.7614, 997.9523, 3615.0527, 3615.0527, 3615.0567], "Revenue Growth (%) 12 months": [-20.3, null, null, 55.2, 55.2, 47.9, null, null, null, null, null, 45.4, 84.8, 84.8, 84.8, null, null, 164.7, 162.9, 250.7, 250.7, 250.7], "Free Cash Flow Growth (%) 12 months": [0.0, null, null, 0.0, 0.0, 1273.1, null, null, null, null, null, 746.2, 1598.3, 1598.3, 1598.3, null, null, 1275.5, 1269.7, 3378.5, 3378.5, 3378.5], "Book Value Growth (%) 12 months": [-8.3, null, null, 13.7, 13.7, 18.6, null, null, null, null, null, 24.3, 47.7, 47.7, 47.7, null, null, 96.7, 96.7, 150.8, 150.8, 153.4], "DIFF NET INCOME % TTM": [null, null, null, null, 87.502, 0.0, null, null, null, null, null, 28.2979, 64.5846, 64.5846, 64.5846, null, null, 83.0807, 83.0945, 0.0, 0.0, 0.0], "DIFF NET Margin %": [null, null, null, null, 15.31, 0.005, null, null, null, null, null, 5.306, 18.646, 18.646, 18.646, null, null, 33.066, 33.085, -0.002, -0.002, -0.002], "Net Margin %_TTM": [null, null, null, 18.41, 18.41, 22.845, null, null, null, null, null, 28.146, 41.486, 41.486, 41.486, null, null, 55.906, 55.906, 63.75, 63.75, 63.75], "DIFF EPS TTM": [null, null, null, null, 87.4776, -0.0, null, null, null, null, null, 28.0339, 64.3523, 64.3523, 64.3523, null, null, 82.9241, 82.9196, -0.1248, -0.1248, -0.1248], "EPS (Basic)TTM": [null, null, null, 5.59, 5.59, 7.65, null, null, null, null, null, 10.63, 21.46, 21.46, 21.46, null, null, 44.8, 44.7963, 75.3, 75.3, 75.3], "ThirdParty+FCF": [null, null, null, null, 200.0, 29.4118, null, null, null, null, null, 178.2609, 200.0, 200.0, 200.0, null, null, 200.0, 200.0, 22.0588, 22.0588, 22.0588]};
+const colors = {"Salman Score": "#059669", "Salman MEGA 6 Score": "#2563eb", "Salman Aggressive 4": "#d97706", "UNDERVALUE / OVERVALUE": "#7c3aed", "ROIC %": "#0284c7", "Score TTM": "#ca8a04", "DIFF Score": "#dc2626", "Earnings Power": "#0d9488", "Average Estimate": "#e11d48", "Revenue Growth (%) 12 months": "#4f46e5", "Free Cash Flow Growth (%) 12 months": "#65a30d", "Book Value Growth (%) 12 months": "#16a34a", "DIFF NET INCOME % TTM": "#78350f", "DIFF NET Margin %": "#334155", "Net Margin %_TTM": "#155e75", "DIFF EPS TTM": "#be185d", "EPS (Basic)TTM": "#14532d", "ThirdParty+FCF": "#9a3412"};
+const grid = document.getElementById('grid');
+Object.keys(series).forEach(p => {
+  const card = document.createElement('div'); card.className = 'card';
+  card.innerHTML = '<h3></h3><canvas></canvas>'; card.querySelector('h3').textContent = p;
+  grid.appendChild(card);
+  new Chart(card.querySelector('canvas'), {
+    type: 'line',
+    data: { labels, datasets: [{ label: p, data: series[p], borderColor: colors[p], backgroundColor: colors[p],
+             spanGaps: true, tension: 0.25, pointRadius: 3, borderWidth: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+               scales: { x: { ticks: { maxTicksLimit: 8 } } } }
+  });
+});
+</script></body></html>

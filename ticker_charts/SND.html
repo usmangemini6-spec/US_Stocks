@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAlgo - SND charts</title>
+<style>
+
+/* ---- SAlgo shared header (site_layout.py) ---- */
+.sa-header{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  background:#fdf8f1;border:1px solid #efe4d2;border-radius:12px;padding:10px 24px;margin:0 0 20px 0;
+  font-family:'Segoe UI','Inter',system-ui,-apple-system,sans-serif;box-sizing:border-box}
+.sa-brand{display:flex;align-items:center;gap:14px;min-width:0;text-decoration:none}
+.sa-logo{height:56px;width:56px;object-fit:contain;border-radius:8px;background:#fff;flex:0 0 auto}
+.sa-title{display:flex;flex-direction:column;min-width:0}
+.sa-title h1{margin:0;font-size:1.3rem;font-weight:700;color:#1f5f2a;line-height:1.2}
+.sa-title p{margin:2px 0 0 0;font-size:.85rem;color:#6b7280}
+.sa-nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sa-nav a{color:#1f2937;text-decoration:none;font-size:1.02rem;font-weight:500;padding:8px 14px;
+  border-radius:8px;white-space:nowrap;transition:color .15s,background .15s}
+.sa-nav a:hover{color:#a8650a;background:#f6ecdc}
+.sa-nav a.sa-active{color:#a8650a;font-weight:600}
+@media (max-width:760px){
+  .sa-header{padding:10px 14px}
+  .sa-nav{width:100%;overflow-x:auto;flex-wrap:nowrap}
+  .sa-nav a{padding:6px 10px;font-size:.95rem}
+  .sa-logo{height:44px;width:44px}
+}
+
+body{font-family:'Segoe UI','Inter',system-ui,sans-serif;background:#faf6ef;color:#1f2937;margin:0;padding:24px}
+.sa-header{max-width:1280px;margin-left:auto;margin-right:auto}
+.wrap{max-width:1280px;margin:0 auto}
+.muted{color:#6b7280;font-size:.9rem;margin:6px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.card{background:#fff;border:1px solid #e7dcc8;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.rt{display:inline-block;padding:1px 8px;border-radius:6px;font-weight:700;font-size:.72rem;color:#fff}.rt.ow{background:#15803d}.rt.buy{background:#65a30d}.rt.hold{background:#ca8a04}.rt.sell{background:#ea580c}.rt.ssell{background:#b91c1c}.bb{color:#6b7280;font-size:.72rem;margin-top:3px}
+
+#analysis{overflow-x:auto;margin-bottom:16px;line-height:1.5;font-size:.9rem}#analysis p{margin:8px 0}.pt{border-collapse:collapse;margin:8px 0;font-size:.82rem}.pt th,.pt td{border:1px solid #e7dcc8;padding:4px 10px;text-align:left}.pt th{background:#f6ecdc}
+.card h3{margin:0 0 8px;font-size:.95rem}
+.card canvas{width:100%!important;height:220px!important}
+</style></head><body>
+
+<header class="sa-header">
+  <a class="sa-brand" href="../index.html">
+    <img class="sa-logo" src="../LOGO.jpeg" alt="SAlgo logo">
+    <div class="sa-title"><h1>SND - Smart Sand Inc</h1></div>
+  </a>
+  <nav class="sa-nav" aria-label="SAlgo pages"><a href="../index.html">Screener</a><a href="../StockAnalysis.html">Stock Analysis</a><a href="../strategy1.html">Strategy 1</a><a href="../strategy2.html">Strategy 2</a><a href="../strategy3.html">Strategy 3</a><a href="../strategy4.html">Strategy 4</a><a href="../performance.html">Performance</a></nav>
+</header>
+
+<div class="wrap">
+<div class="muted">Smart Sand Inc &middot; 13 monthly snapshots (2025-10-22 &rarr; 2026-11-03)</div>
+<div class="card" id="analysis"><h3>Business analysis <span class="rt hold">HOLD</span> <span class="muted">as of 2026-11-08 @ $3.58</span></h3><p><b>Rating: HOLD</b> at <b>$3.58</b> (Yahoo, 2026-11-06, NasdaqGS). <b>Buy below: $3.00 (about 11.5x trailing EPS of $0.26), or buy HAL instead.</b></p><p><b>Shariah status:</b> SND is <b>HALAL</b> (Musaffa list, 31 Oct 2026). <b>HAL, named below as the better stock, was confirmed HALAL on the Musaffa website (Nov 2026).</b> WHD is HALAL on the Musaffa list. NOV is <b>not on the list</b> and is <b>not compared</b>.</p><p><b>Quality:</b> <b>Weak-to-fair.</b> Operating margin about <b>9%</b>, Yahoo free cash flow <b>+$31M</b> (trailing; the company reported <b>-$1.4M in Q2</b>), cash <b>$10M</b> vs debt <b>$43M</b> (<b>net debt $33M</b>), market value only <b>$152M</b>. Moat: owns large Northern White sand reserves with rail access, but frac sand is a commodity with little pricing power. <b>Cash flow is uneven.</b></p><p><b>Growth:</b> <b>Recovering from a weak start.</b> Q1 2026 revenue was <b>$93M with a $3.9M loss</b>; Q2 revenue was <b>$115.1M (vs $85.8M)</b>, tons sold <b>+31%</b> (1.86M tons), net income <b>$10.2M ($0.25 a share)</b>, adjusted EBITDA <b>$18.7M</b>. <b>Guidance:</b> 2026 volumes <b>+10-20%</b> (raised from +5-10%), activity strong through Q3 and possibly Q4, positive free cash flow for the year. <b>Q3 results are due 11 Nov 2026.</b> Nothing found for 2027.</p><p><b>Price (PEG):</b> Trailing P/E <b>13.8x</b>, forward <b>11.5x</b>, <b>PEG 0.86</b> (Yahoo, but there are <b>no analyst estimates</b>, so these are unreliable). Trailing EPS is about <b>$0.26</b>, so $3.00 is about 11.5x. The price is <b>40% below its 52-week high</b> ($5.90; low $2.10).</p><p><b>Cyclical:</b> <b>Yes, highly cyclical</b> (oil and gas drilling and well completions). <b>Mid-cycle</b>; volumes are strong now, but oil-price swings can reverse this quickly.</p><p><b>Analysts:</b> <b>No current analyst coverage</b> in Yahoo data (the last actions were Piper Sandler and Stifel in 2024). <b>No consensus, target or estimate trend exists.</b> <b>TipRanks:</b> not accessible for this review; Yahoo analyst data and recent rating actions were used instead.</p><p><b>Where I disagree:</b> There is <b>no consensus to disagree with</b>. My view: <b>good volume momentum, but negative Q2 cash flow, thin margins and an oil-price-driven business</b> do not justify paying more than about 11x trailing earnings, and <b>Q3 is days away</b>.</p><p><b>Risks:</b> Oil-price and drilling-activity swings, customer concentration (a few large service companies), freight and logistics costs, thin margins, debt, small size, and <b>no analyst coverage</b>.</p><p><b>Legal risk:</b> <b>Nothing material found.</b> A <b>Federal Mine Safety Review Commission case (Secretary of Labor v. Smart Sand, order dated 9 Mar 2026)</b> exists; its substance could not be read. An <b>older contract suit in which Smart Sand was the plaintiff (vs Schlumberger, shortfall payments)</b> also appeared. <b>No class action or securities investigation found.</b></p><p><b>Market stance:</b> the latest view I could find from a well-known, usually bullish Wall Street strategist: constructive, with a year-end 2026 S&amp;P 500 target near 8,000, but he flags a possible pullback to about 7,100-7,200 first and warns that rising Treasury yields could compress valuation multiples even if earnings keep growing (the S&amp;P 500 closed at 7,698.80 on Nov 4). Several sources were undated, and this stance is almost always bullish, so I weight it lightly.</p><p><b>Peer comparison:</b> HAL is the cheaper large-cap option; WHD is dearer but net cash. Yahoo data, 6 Nov 2026.</p><table class="pt"><thead><tr><th>Ticker (Company)</th><th>Price</th><th>Fwd P/E</th><th>PEG</th><th>Rev growth</th><th>FCF</th><th>Net debt</th><th>Main risk (incl. legal)</th><th>Recommendation</th></tr></thead><tbody><tr><td><b>SND (Smart Sand)</b></td><td><b>$3.58</b></td><td>11.5 (unreliable)</td><td>0.86</td><td>+34%</td><td>+$31M (Q2: -$1.4M)</td><td>$33M</td><td>Mine-safety case (substance unread); oil-cycle swings; no analysts</td><td><b>HOLD; buy below $3, or buy HAL instead</b></td></tr><tr><td><b>HAL (Halliburton)</b></td><td>$31.84</td><td>10.8</td><td>0.65</td><td>+2%</td><td>+$1.6B</td><td>$6.4B</td><td>Old settled class actions ($100M asbestos-related, 2017); no 2026 case found</td><td><b>Better: cheaper, 50x the free cash flow, diversified, but slow growth and $6.4B net debt</b></td></tr><tr><td>WHD (Cactus)</td><td>$58.12</td><td>16.1</td><td>n/a</td><td>+63%</td><td>+$81M</td><td>net cash $300M</td><td>Cameron International patent suit pending (per a third-party report; status unverified)</td><td>Dearer, faster growth, net cash</td></tr></tbody></table><p><b>Conclusion:</b> <b>A lower-risk halal stock exists: HAL (Halliburton).</b> It is <b>HALAL on Musaffa</b>, trades at <b>10.8x vs 11.5x forward</b> with <b>$1.6B of free cash flow</b> and a broad business across oilfield services. Its cost is <b>only 2% growth and $6.4B of net debt</b>. WHD has <b>net cash and +63% growth</b> at 16.1x. SND is the <b>smallest and most volatile</b> way to play the same cycle.</p><p><b>Summary &amp; rating:</b> <b>HOLD.</b> <b>Buy HAL instead for a lower-risk oilfield exposure; buy SND only below about $3</b>, ideally after the 11 Nov Q3 report. Risks for SND: <b>oil-price swings, uneven cash flow, customer concentration and no analyst coverage</b>. It becomes a BUY near <b>$3</b>.</p><div class="muted">Automated opinion from public information, not financial advice.</div></div>
+<div class="grid" id="grid"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const labels = ["2024-06-06", "2024-08-19", "2024-09-20", "2025-09-12", "2025-09-14", "2025-10-22", "2025-10-23", "2025-10-28", "2025-11-03", "2026-01-01", "2026-01-02", "2026-03-01", "2026-04-22", "2026-05-18", "2026-07-09", "2026-07-15", "2026-07-28", "2026-08-28", "2026-09-29", "2026-10-10", "2026-10-13", "2026-11-03"];
+const series = {"Salman Score": [null, null, null, null, null, 3.0, null, null, null, null, null, 9.0, null, 9.0, 9.0, null, null, 12.0, 12.0, 12.0, 12.0, 12.0], "Salman MEGA 6 Score": [null, null, null, null, null, 1.0, null, null, null, null, null, 3.0, null, 3.0, 3.0, null, null, 5.0, 5.0, 5.0, 5.0, 5.0], "Salman Aggressive 4": [null, null, null, null, null, 1.0, null, null, null, null, null, 2.0, null, 1.0, 1.0, null, null, 3.0, 3.0, 3.0, 3.0, 3.0], "UNDERVALUE / OVERVALUE": [null, null, null, null, null, -1.6507, null, null, null, null, null, -0.4313, null, 2.0006, 2.0881, null, null, 1.6024, 1.276, 1.1688, 1.1688, 1.3749], "ROIC %": [null, null, null, null, null, 0.0, null, null, null, null, null, 0.33, null, 0.0, 0.0, null, null, 2.51, 2.51, 2.45, 2.45, 2.45], "Score TTM": [null, null, null, null, null, 43.2692, null, null, null, null, null, 61.2179, null, 63.7821, 63.7821, null, null, 71.7949, 75.9615, 75.9615, 75.9615, 75.9615], "DIFF Score": [null, null, null, null, null, 8.2051, null, null, null, null, null, 26.1538, null, -1.9231, -1.9231, null, null, 6.0897, 2.8846, 2.8846, 2.8846, 2.8846], "Earnings Power": [null, null, null, null, null, -14.9671, null, null, null, null, null, -15.2559, null, -12.7649, -12.7649, null, null, -13.4763, -17.7177, -17.7104, -17.7104, -17.7104], "Average Estimate": [null, null, null, null, null, -1.3339, null, null, null, null, null, 2.8806, null, 14.2977, 14.2977, null, -2146826273.0, 12.5983, 11.5164, 11.4946, 11.4946, 11.4946], "Revenue Growth (%) 12 months": [null, null, null, null, null, 1.0, null, null, null, null, null, 16.6, null, 21.3, 21.3, null, null, 24.9, 24.4, 24.4, 24.4, 24.4], "Free Cash Flow Growth (%) 12 months": [null, null, null, null, null, -93.2, null, null, null, null, null, 472.5, null, 27.6, 27.6, null, null, 12357.1, 12385.7, 12385.7, 12385.7, 12385.7], "Book Value Growth (%) 12 months": [null, null, null, null, null, -0.7, null, null, null, null, null, -1.2, null, 6.6, 6.6, null, null, -1.8, -1.8, -1.8, -1.8, -1.8], "DIFF NET INCOME % TTM": [null, null, null, null, null, -272.6027, null, null, null, null, null, 23.341, null, 93.8064, 93.8064, null, null, 87.1758, 87.1758, 87.1783, 87.1783, 87.1783], "DIFF NET Margin %": [null, null, null, null, null, -0.697, null, null, null, null, null, 0.203, null, 5.661, 5.661, null, null, 2.3, 2.303, 2.303, 2.303, 2.303], "Net Margin %_TTM": [null, null, null, null, null, 0.263, null, null, null, null, null, 1.163, null, 6.071, 6.071, null, null, 2.71, 2.71, 2.71, 2.71, 2.71], "DIFF EPS TTM": [null, null, null, null, null, -196.2963, null, null, null, null, null, 27.2727, null, 94.6429, 94.6429, null, null, 88.8889, 87.169, 87.4074, 87.4074, 87.4074], "EPS (Basic)TTM": [null, null, null, null, null, 0.027, null, null, null, null, null, 0.11, null, 0.56, 0.56, null, null, 0.27, 0.2681, 0.27, 0.27, 0.27], "ThirdParty+FCF": [null, null, null, null, null, 50.8312, null, null, null, null, null, 132.8645, null, 58.8235, 58.8235, null, null, 89.3862, 104.0921, 104.0921, 104.0921, 104.0921]};
+const colors = {"Salman Score": "#059669", "Salman MEGA 6 Score": "#2563eb", "Salman Aggressive 4": "#d97706", "UNDERVALUE / OVERVALUE": "#7c3aed", "ROIC %": "#0284c7", "Score TTM": "#ca8a04", "DIFF Score": "#dc2626", "Earnings Power": "#0d9488", "Average Estimate": "#e11d48", "Revenue Growth (%) 12 months": "#4f46e5", "Free Cash Flow Growth (%) 12 months": "#65a30d", "Book Value Growth (%) 12 months": "#16a34a", "DIFF NET INCOME % TTM": "#78350f", "DIFF NET Margin %": "#334155", "Net Margin %_TTM": "#155e75", "DIFF EPS TTM": "#be185d", "EPS (Basic)TTM": "#14532d", "ThirdParty+FCF": "#9a3412"};
+const grid = document.getElementById('grid');
+Object.keys(series).forEach(p => {
+  const card = document.createElement('div'); card.className = 'card';
+  card.innerHTML = '<h3></h3><canvas></canvas>'; card.querySelector('h3').textContent = p;
+  grid.appendChild(card);
+  new Chart(card.querySelector('canvas'), {
+    type: 'line',
+    data: { labels, datasets: [{ label: p, data: series[p], borderColor: colors[p], backgroundColor: colors[p],
+             spanGaps: true, tension: 0.25, pointRadius: 3, borderWidth: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+               scales: { x: { ticks: { maxTicksLimit: 8 } } } }
+  });
+});
+</script></body></html>
