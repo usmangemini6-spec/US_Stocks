@@ -1,0 +1,50 @@
+name: Monthly cycles
+
+# On the 1st of every month (02:17 UTC = 05:17 Riyadh, after the month-end closes) this:
+#   1. downloads the latest market data (stocks, gold, silver, miners, oil, inflation, rates, home prices)
+#   2. re-runs the cycle backtests and forecasts
+#   3. rebuilds the Cycles pages in cycles/ and commits them, so the site updates by itself.
+# Code and data live in tools/cycles/ (copied there by DEPLOY_TO_GITHUB.bat).
+# Run it by hand any time: GitHub > Actions > Monthly cycles > Run workflow.
+on:
+  schedule:
+    - cron: "17 2 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: site-updates
+  cancel-in-progress: false
+
+jobs:
+  cycles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install yfinance pandas numpy
+      - name: Download data
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}   # optional; leave unset if you have none
+        run: python tools/cycles/download_cycle_data.py
+      - name: Build Cycles pages
+        env:
+          CYCLES_OUT: ${{ github.workspace }}/cycles
+        run: python -X utf8 tools/cycles/cycles_builder/build_cycles.py
+      - name: Commit if changed
+        run: |
+          git add cycles tools/cycles/cycles_data
+          if git diff --cached --quiet; then
+            echo "No change to commit."
+          else
+            git config user.name "github-actions"
+            git config user.email "github-actions@users.noreply.github.com"
+            git commit -m "Monthly cycles $(date -u +%F)"
+            git pull --rebase origin main
+            git push
+          fi
