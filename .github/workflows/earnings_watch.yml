@@ -1,0 +1,43 @@
+name: Earnings watch
+
+# Tuesday-Saturday 03:43 UTC (06:43 Riyadh), after US results are out: lists Screener stocks that reported
+# earnings after their business analysis, writes earnings_pending.json for the PC daily task,
+# and keeps the GitHub issue "Earnings to update" current (GitHub emails you about it).
+on:
+  schedule:
+    - cron: "43 3 * * 2-6"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: site-updates
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check earnings
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python tools/earnings_watch.py
+      - name: Commit if changed
+        run: |
+          git add earnings_pending.json
+          if git diff --cached --quiet; then
+            echo "No change to commit."
+          else
+            git config user.name "github-actions"
+            git config user.email "github-actions@users.noreply.github.com"
+            git commit -m "Earnings watch $(date -u +%F)"
+            git pull --rebase origin main
+            git push
+          fi
