@@ -2,10 +2,11 @@
 update_portfolio.py - run every weekday by the GitHub workflow (.github/workflows/daily_prices.yml),
 right after update_prices.py.
 
-Reads the encrypted trades (tools/portfolio/ledger.enc) with the PORTFOLIO_PASSWORD repository secret,
-downloads the daily closes (Yahoo first, Stooq if Yahoo fails), applies the automatic target closes
-for you and the SAlgo Autopilot, and writes the new encrypted figures into portfolio.html.
-It never changes the trades file, so it cannot clash with the trades you make on the PC.
+Also run by the "Portfolio" workflow when the PC publishes new data (tools/portfolio/universe.enc).
+Reads the encrypted data + trades with the PORTFOLIO_PASSWORD repository secret, downloads the daily
+closes (Yahoo first, Stooq if Yahoo fails), applies the automatic target closes for you and the SAlgo
+Autopilot, and rebuilds portfolio.html (current menu + encrypted figures). It never changes the
+data or trades files. Prints totals only as "updated", never the figures (the Actions log is public).
 
 Exit code is always 0 (a portfolio problem must not stop the daily prices job); problems are printed.
 """
@@ -23,7 +24,7 @@ def main():
     if not pw:
         print("Portfolio: PORTFOLIO_PASSWORD secret not set - skipped.")
         return 0
-    if not os.path.exists(pc.LEDGER) or not os.path.exists(pc.PAGE):
+    if not any(os.path.exists(f) for f in (pc.UNIVERSE, pc.TRADES, pc.LEDGER)):
         print("Portfolio: nothing published yet - skipped.")
         return 0
     try:
@@ -32,13 +33,11 @@ def main():
         print("Portfolio: the PORTFOLIO_PASSWORD secret does not match the password used on the PC - skipped.")
         return 0
     old = pc.read_page_state(pw) or {}
-    px = pc.fetch_prices(ledger, cache=old.get("px"))
+    px = pc.fetch_prices(ledger, cache=old.get("px"), log=lambda *a: None)
     state = pc.build_state(ledger, px)
     state["px"] = px
     pc.write_page_state(state, pw)
-    y, a = state["you"], state["auto"]
-    print(f"Portfolio updated to {state['as_of']}: you ${y['total']:,.0f} ({y['ret_pct']:+.2f}%), "
-          f"Autopilot ${a['total']:,.0f} ({a['ret_pct']:+.2f}%)")
+    print(f"Portfolio updated to {state['as_of']}.")
     return 0
 
 
@@ -46,5 +45,5 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except Exception as e:
-        print(f"Portfolio: not updated ({type(e).__name__}: {e})")
+        print(f"Portfolio: not updated ({type(e).__name__})")
         sys.exit(0)

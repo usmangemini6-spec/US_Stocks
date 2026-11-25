@@ -16,13 +16,15 @@ Rules (change only here)
     RED holdings, then buys one $5,000 unit of each Preferred stock in order of Salman Score, then
     Score TTM, while cash and the limits allow. Target closes work the same way.
 
-Storage
-  - tools/portfolio/ledger.enc : your trades + data snapshots, encrypted (AES-256-GCM, key from the
-    password with PBKDF2-SHA256). Written only by the PC.
-  - portfolio.html : the page; its data block /*PF_START*/ ... /*PF_END*/ is encrypted with the same
-    password and is decrypted in the browser after the password is typed.
-  The automatic target closes are worked out from the daily closes every time (never written into
-  the ledger), so the PC and the GitHub job never edit the same file.
+Storage (each file has ONE writer, so nothing can overwrite anything else)
+  - tools/portfolio/universe.enc : latest Preferred data + monthly Autopilot snapshots. Written only by
+    the PC (build_shortlisted.py -> portfolio_manager.refresh), published by DEPLOY_TO_GITHUB.bat.
+  - tools/portfolio/trades.enc   : your trades + recent trade requests. Written only by the GitHub
+    "Portfolio" workflow (trade.py), from the Buy / Sell buttons on the locked page.
+  - portfolio.html               : the page. Built only on GitHub (render in page.py); its data block
+    /*PF_START*/ ... /*PF_END*/ is encrypted and decrypted in the browser after the password.
+  All encrypted with AES-256-GCM, key from the password with PBKDF2-SHA256.
+  The automatic target closes are worked out from the daily closes every time (never stored).
 """
 import base64
 import json
@@ -33,7 +35,10 @@ from datetime import date, datetime, timedelta
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.normpath(os.path.join(HERE, "..", ".."))
-LEDGER = os.path.join(HERE, "ledger.enc")
+LEDGER = os.path.join(HERE, "ledger.enc")            # old single file (before web trading) - migrated
+UNIVERSE = os.path.join(HERE, "universe.enc")
+TRADES = os.path.join(HERE, "trades.enc")
+MAX_REQUESTS = 100
 PAGE = os.path.join(SITE, "portfolio.html")
 PF_BLOCK = re.compile(r"/\*PF_START\*/window\.PF=(\".*?\");/\*PF_END\*/", re.S)
 
@@ -76,22 +81,45 @@ def decrypt(blob, password):
 
 
 def new_ledger():
-    return {"version": 1, "created": date.today().isoformat(), "trades": [], "universe": {}, "snapshots": []}
+    return {"version": 2, "created": date.today().isoformat(), "trades": [], "requests": [], "universe": {}, "snapshots": []}
 
 
-def load_ledger(password):
-    if not os.path.exists(LEDGER):
-        return new_ledger()
-    with open(LEDGER, encoding="ascii") as f:
+def _read(path, password):
+    with open(path, encoding="ascii") as f:
         return decrypt(f.read(), password)
 
 
-def save_ledger(ledger, password):
-    os.makedirs(os.path.dirname(LEDGER), exist_ok=True)
-    tmp = LEDGER + ".tmp"
+def _write(path, obj, password):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = path + ".tmp"
     with open(tmp, "w", encoding="ascii") as f:
-        f.write(encrypt(ledger, password))
-    os.replace(tmp, LEDGER)
+        f.write(encrypt(obj, password))
+    os.replace(tmp, path)
+
+
+def load_ledger(password):
+    """Both files merged into one dict (falls back to the old single ledger.enc)."""
+    led = new_ledger()
+    if not os.path.exists(UNIVERSE) and not os.path.exists(TRADES) and os.path.exists(LEDGER):
+        old = _read(LEDGER, password)
+        led.update({k: old.get(k, led[k]) for k in ("trades", "universe", "snapshots")})
+        return led
+    if os.path.exists(UNIVERSE):
+        u = _read(UNIVERSE, password)
+        led["universe"], led["snapshots"] = u.get("universe") or {}, u.get("snapshots") or []
+    if os.path.exists(TRADES):
+        t = _read(TRADES, password)
+        led["trades"], led["requests"] = t.get("trades") or [], t.get("requests") or []
+    return led
+
+
+def save_universe(ledger, password):          # PC only
+    _write(UNIVERSE, {"universe": ledger["universe"], "snapshots": ledger["snapshots"]}, password)
+
+
+def save_trades(ledger, password):            # GitHub trade job only (and one-time migration / password change)
+    ledger["requests"] = ledger.get("requests", [])[-MAX_REQUESTS:]
+    _write(TRADES, {"trades": ledger["trades"], "requests": ledger["requests"]}, password)
 
 
 def read_page_state(password):
@@ -103,13 +131,13 @@ def read_page_state(password):
         return None
 
 
-def write_page_state(state, password, page_html=None):
-    """Put the encrypted state into portfolio.html (page_html = full new page from the PC build;
-    None = keep the existing page and only replace its data block, as the GitHub job does)."""
+def write_page_state(state, password):
+    """Build the whole portfolio.html (current menu + encrypted data). Runs on GitHub."""
+    import page
     block = "/*PF_START*/window.PF=" + json.dumps(encrypt(state, password)) + ";/*PF_END*/"
-    html = page_html if page_html is not None else open(PAGE, encoding="utf-8").read()
+    html = page.page_html(os.environ.get("GITHUB_REPOSITORY") or page.DEFAULT_REPO)
     if not PF_BLOCK.search(html):
-        raise ValueError("portfolio.html has no data block")
+        raise ValueError("page template has no data block")
     html = PF_BLOCK.sub(lambda m: block, html)
     with open(PAGE, "w", encoding="utf-8") as f:
         f.write(html)
@@ -377,27 +405,26 @@ def build_state(ledger, px, today=None):
         "you": book_view(you, px, last, uni, days), "auto": book_view(auto, px, last, uni, days),
         "bench": bench, "eligible": eligible,
         "autopilot_start": ledger["snapshots"][0]["date"] if ledger["snapshots"] else None,
+        "requests": ledger.get("requests", [])[-20:],
     }
 
 
 # ======================================================================= prices
-def fetch_prices(ledger, cache=None, fetcher=None, today=None, log=print):
+def fetch_prices(ledger, cache=None, fetcher=None, today=None, log=print, extra=()):
     """Daily closes for every ticker the two portfolios need, plus SPY. Rebuilt from the first
     trade / snapshot date every time (missed days fill themselves). fetcher(ticker, start) -> {date: close}."""
     if fetcher is None:
         sys.path.insert(0, os.path.dirname(HERE))
         from update_prices import fetch as _f
         fetcher = lambda t, s: _f(t, s)[0]
-    starts = [x["date"] for x in ledger["trades"]] + [s["date"] for s in ledger["snapshots"]]
-    if not starts:
-        return {}
-    start = (date.fromisoformat(min(starts)) - timedelta(days=7)).isoformat()
+    starts = [x["date"] for x in ledger["trades"]] + [s["date"] for s in ledger["snapshots"]] + [today or date.today().isoformat()]
+    start = (date.fromisoformat(min(starts)) - timedelta(days=10)).isoformat()
     px = {}
     cache = cache or {}
     got = set()
     for _ in range(4):                     # Autopilot holdings depend on prices: repeat until stable
         you, auto, _d = simulate(ledger, px, today)
-        need = (needed_tickers(ledger, you, auto) | {BENCH}) - got
+        need = (needed_tickers(ledger, you, auto) | {BENCH} | set(extra)) - got
         if not need:
             break
         for t in sorted(need):
@@ -413,3 +440,58 @@ def fetch_prices(ledger, cache=None, fetcher=None, today=None, log=print):
                 px[t] = s
             got.add(t)
     return px
+
+
+# ======================================================================= a trade (GitHub job)
+def latest_close(px, t, today):
+    h = px.get(t) or {}
+    ds = [d for d in h if d <= today]
+    return (h[max(ds)], max(ds)) if ds else (None, None)
+
+
+def apply_request(ledger, req, px, today=None, now_ms=None):
+    """Validates one decrypted trade request from the page and adds it to ledger["trades"].
+    Returns (ok, message). Always records the request id so the page can show the result."""
+    import time
+    today = today or date.today().isoformat()
+    now_ms = now_ms or int(time.time() * 1000)
+    rid = str(req.get("id") or "")[:64]
+    if not re.fullmatch(r"[A-Za-z0-9-]{8,64}", rid):
+        return False, "Bad request id."
+    if any(r["id"] == rid for r in ledger.get("requests", [])):
+        return False, "Already processed."
+
+    def done(ok, msg):
+        ledger.setdefault("requests", []).append({"id": rid, "ok": ok, "msg": msg, "at": datetime.utcnow().isoformat(timespec="seconds") + "Z"})
+        return ok, msg
+
+    ts = int(req.get("ts") or 0)
+    if not (now_ms - 2 * 3600 * 1000 <= ts <= now_ms + 10 * 60 * 1000):
+        return done(False, "Request too old - press the button again.")
+    t = str(req.get("t") or "").upper()
+    act = req.get("act")
+    if not re.fullmatch(r"[A-Z0-9.\-]{1,10}", t) or act not in ("BUY", "SELL", "CLOSE"):
+        return done(False, "Bad stock or action.")
+    price = num(req.get("price"))
+    if price is None or price <= 0:
+        price, pdate = latest_close(px, t, today)
+        if price is None:
+            u = (ledger.get("universe") or {}).get("stocks", {}).get(t) or {}
+            price = u.get("price")
+        if not price:
+            return done(False, f"No price found for {t} - type the price and try again.")
+    you, _a, _d = simulate(ledger, px, today)
+    u = (ledger.get("universe") or {}).get("stocks", {}).get(t)
+    seq = len(ledger["trades"])
+    if act == "BUY":
+        why = check_buy(you, px, today, t, u, price)
+        if why:
+            return done(False, why)
+        ledger["trades"].append({"date": today, "seq": seq, "t": t, "side": "BUY", "price": round(price, 4),
+                                 "target": u.get("pt"), "sector": u.get("sector"), "req": rid})
+        return done(True, f"Bought ${UNIT:,.0f} of {t} at ${price:,.2f}")
+    if t not in you.pos:
+        return done(False, f"You do not hold {t}.")
+    ledger["trades"].append({"date": today, "seq": seq, "t": t, "side": "SELL", "price": round(price, 4),
+                             "all": act == "CLOSE", "req": rid})
+    return done(True, (f"Closed {t}" if act == "CLOSE" else f"Sold ${UNIT:,.0f} of {t}") + f" at ${price:,.2f}")
