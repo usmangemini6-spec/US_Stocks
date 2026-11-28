@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>SAlgo - 1150 - TASI Stock</title><style>
+/* ---- SAlgo shared header (site_layout.py) ---- */
+.sa-header{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  background:#fdf8f1;border:1px solid #efe4d2;border-radius:12px;padding:10px 24px;margin:0 0 20px 0;
+  font-family:'Segoe UI','Inter',system-ui,-apple-system,sans-serif;box-sizing:border-box}
+.sa-brand{display:flex;align-items:center;gap:14px;min-width:0;text-decoration:none}
+.sa-logo{height:56px;width:56px;object-fit:contain;border-radius:8px;background:#fff;flex:0 0 auto}
+.sa-title{display:flex;flex-direction:column;min-width:0}
+.sa-title h1{margin:0;font-size:1.3rem;font-weight:700;color:#1f5f2a;line-height:1.2}
+.sa-title p{margin:2px 0 0 0;font-size:.85rem;color:#6b7280}
+.sa-nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sa-nav a{color:#1f2937;text-decoration:none;font-size:1.02rem;font-weight:500;padding:8px 14px;
+  border-radius:8px;white-space:nowrap;transition:color .15s,background .15s}
+.sa-nav a:hover{color:#a8650a;background:#f6ecdc}
+.sa-nav a.sa-active{color:#a8650a;font-weight:600}
+@media (max-width:760px){
+  .sa-header{padding:10px 14px}
+  .sa-nav{width:100%;overflow-x:auto;flex-wrap:nowrap}
+  .sa-nav a{padding:6px 10px;font-size:.95rem}
+  .sa-logo{height:44px;width:44px}
+}
+
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:#faf6ef;color:#0f172a;margin:0;padding:24px}
+.sa-header,.card,.wrap{max-width:1400px;margin-left:auto;margin-right:auto}
+.card{background:#fff;border:1px solid #e7dcc8;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.lock{max-width:460px}.lock input[type=password]{padding:8px 10px;border:1px solid #e7dcc8;border-radius:8px;width:220px}
+.lock button,.bar button{padding:8px 14px;border-radius:8px;border:1px solid #1f5f2a;background:#1f5f2a;color:#fff;font-weight:600;cursor:pointer}
+.muted{color:#64748b;font-size:.85rem} a{color:#0b5fa5;text-decoration:none;font-weight:600}
+.bar{display:flex;gap:14px;align-items:center;margin-bottom:12px;flex-wrap:wrap}.bar input,.bar select{padding:7px 10px;border:1px solid #e7dcc8;border-radius:8px}
+.tbl-wrap{overflow:auto;max-height:78vh} table{border-collapse:collapse;font-size:.82rem} .card table{width:100%}
+.card th,.card td{border:1px solid #e7dcc8;padding:6px 8px;text-align:left;vertical-align:top}
+.card th{background:#f6ecdc;font-size:.76rem;min-width:64px;position:sticky;top:0;z-index:3;cursor:pointer} .card tr:nth-child(even) td{background:#fdfaf4}
+td.n{text-align:right;white-space:nowrap}
+#st td:first-child,#st th:first-child{position:sticky;left:0;z-index:2;background:#fff;box-shadow:2px 0 0 #e7dcc8} #st th:first-child{z-index:4;background:#f6ecdc}
+.rt{display:inline-block;padding:1px 8px;border-radius:6px;font-weight:700;font-size:.72rem;color:#fff}.rt.ow{background:#15803d}.rt.buy{background:#65a30d}.rt.hold{background:#ca8a04}.rt.sell{background:#ea580c}.rt.ssell{background:#b91c1c}.bb{color:#6b7280;font-size:.72rem;margin-top:3px}
+
+td.ba{width:25ch;min-width:25ch;max-width:25ch;font-size:.75rem;line-height:1.3;padding:4px 8px}.bal1{white-space:nowrap}
+.bat{width:25ch;max-width:25ch;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.babtn{cursor:pointer;border:1px solid #e7dcc8;background:#f6ecdc;border-radius:6px;padding:0 6px;font-weight:700;vertical-align:middle;line-height:1.2}
+.bapop{max-width:440px;white-space:normal;font-size:.85rem;line-height:1.4;border:1px solid #e7dcc8;border-radius:12px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.18)}.bapop p{margin:8px 0}
+h3{color:#1f5f2a;margin-top:0}
+.hc{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:20px 28px;border-radius:12px;margin-bottom:20px;border:1px solid #e7dcc8;gap:12px;flex-wrap:wrap}
+.hc h2{margin:0;font-size:1.5rem} .hc p{margin:4px 0 0;font-size:.875rem;color:#64748b}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.tile{background:#fff;border:1px solid #e7dcc8;border-radius:12px;padding:12px 14px} .tile>span{display:block;font-size:.75rem;color:#64748b}
+.tile b{font-size:1.2rem;display:block;margin:5px 0} .tile small{color:#64748b;font-size:.74rem}
+.ba-card{background:#fff;border:1px solid #e7dcc8;border-radius:12px;padding:18px 22px;margin-bottom:20px;overflow-x:auto;line-height:1.5;font-size:.9rem}
+.ba-card h3{margin:0 0 8px;font-size:1.05rem;color:#0f172a} .ba-card p{margin:8px 0}
+.pt{border-collapse:collapse;margin:8px 0;font-size:.82rem} .pt th,.pt td{border:1px solid #e7dcc8;padding:4px 10px;text-align:left} .pt th{background:#f6ecdc}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px} @media(max-width:900px){.two{grid-template-columns:1fr}}
+.pos{color:#15803d}.neg{color:#b91c1c}
+</style></head><body>
+<header class="sa-header"><a class="sa-brand" href="../index.html"><img class="sa-logo" src="../../LOGO.jpeg" alt="SAlgo logo">
+<div class="sa-title"><h1>1150 - TASI Stock</h1><p>Saudi Exchange (Tadawul) · Shariah-compliant stocks</p></div></a>
+<nav class="sa-nav"><a href="../index.html">Screener</a><a href="../preferred.html">Preferred Stocks</a><a href="../performance.html">Performance</a>
+<a href="../../index.html">US Stocks</a></nav></header>
+<div id="tasilock" class="card lock" style="display:none"><h2>Private page</h2><p>Type the TASI password to open it.</p><form id="tasif"><input id="tasipw" type="password" autocomplete="current-password" placeholder="Password"> <label><input id="tasirem" type="checkbox"> Remember on this device</label> <button type="submit">Open</button></form><div id="tasierr" style="color:#b91c1c;margin-top:8px"></div></div><div id="tasiapp" style="display:none"></div><script>window.TASI="v1.5gWXDn6PFlssNg6cDEfxcQ==.QZGPwZTtP8HN4Bkf.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";</script><script>
+(function(){
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function keyFor(pw,salt){const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+ return crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(salt),iterations:310000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},true,['decrypt']);}
+async function open(pw,fromStore){
+ const [v,s,n,c]=window.TASI.split('.'); let key;
+ const cached=sessionStorage.getItem('tasik_'+s);
+ if(fromStore&&cached){key=await crypto.subtle.importKey('raw',b64(cached),'AES-GCM',true,['decrypt']);} else {key=await keyFor(pw,s);}
+ const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(n)},key,b64(c));
+ const raw=new Uint8Array(await crypto.subtle.exportKey('raw',key)); sessionStorage.setItem('tasik_'+s,btoa(String.fromCharCode(...raw)));
+ const box=document.getElementById('tasiapp'); box.innerHTML=new TextDecoder().decode(pt);
+ box.querySelectorAll('script').forEach(o=>{const x=document.createElement('script');x.textContent=o.textContent;o.replaceWith(x);});
+ document.getElementById('tasilock').style.display='none'; box.style.display='block';
+}
+const s=window.TASI.split('.')[1], saved=localStorage.getItem('tasipw');
+(sessionStorage.getItem('tasik_'+s)?open(null,true):saved?open(saved,false):Promise.reject()).catch(()=>{document.getElementById('tasilock').style.display='block';});
+document.getElementById('tasif').addEventListener('submit',async ev=>{ev.preventDefault();const pw=document.getElementById('tasipw').value;
+ try{await open(pw,false); if(document.getElementById('tasirem').checked) localStorage.setItem('tasipw',pw);}catch(x){document.getElementById('tasierr').textContent='Wrong password.';}});
+})();
+</script></body></html>
